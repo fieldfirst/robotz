@@ -5,20 +5,20 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.robotz.view.FrmMain;
+import com.robotz.view.EditorJFrame;
 
 public class TestMainUI {
 	
-	FrmMain frmMain;
+	EditorJFrame frmMain;
 	
 	@Before
 	public void setUp() throws Exception {
-		frmMain = new FrmMain();
+		frmMain = new EditorJFrame();
 	}
 	
 	@Test
 	public void testFrmMain() {
-		assertTrue(frmMain instanceof FrmMain);
+		assertTrue(frmMain instanceof EditorJFrame);
 	}
 
 }
