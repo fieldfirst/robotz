@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -47,7 +46,7 @@ public class TextLineNumber extends JPanel
 	public final static float CENTER = 0.5f;
 	public final static float RIGHT = 1.0f;
 
-	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
+	private final static Border OUTER = new EmptyBorder(0, 0, 0, 2);
 
 	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
 
@@ -97,13 +96,16 @@ public class TextLineNumber extends JPanel
 		setFont( component.getFont() );
 
 		setBorderGap( 5 );
-		setCurrentLineForeground( Color.RED );
+		setCurrentLineForeground(new Color(158, 148, 148));
 		setDigitAlignment( RIGHT );
 		setMinimumDisplayDigits( minimumDisplayDigits );
 
 		component.getDocument().addDocumentListener(this);
 		component.addCaretListener( this );
 		component.addPropertyChangeListener("font", this);
+		
+		setBackground(new Color(238, 230, 230));
+		setForeground(new Color(158, 148, 148));
 	}
 
 	/**
@@ -285,7 +287,7 @@ public class TextLineNumber extends JPanel
     			int stringWidth = fontMetrics.stringWidth( lineNumber );
     			int x = getOffsetX(availableWidth, stringWidth) + insets.left;
 				int y = getOffsetY(rowStartOffset, fontMetrics);
-    			g.drawString(lineNumber, x, y);
+    			g.drawString(lineNumber, x, y);    			
 
     			//  Move to the next row
 

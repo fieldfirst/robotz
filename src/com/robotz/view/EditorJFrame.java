@@ -6,8 +6,13 @@ package com.robotz.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,8 +23,12 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeListener;
 
-public class EditorJFrame extends JFrame implements EditorView {
+import com.robotz.controller.EditorController;
+
+public class EditorJFrame extends JFrame {
 
 	private static final long serialVersionUID = -2317507914722664644L;
 	private JMenuBar mainMenu;
@@ -48,27 +57,38 @@ public class EditorJFrame extends JFrame implements EditorView {
 	private JMenuItem mnuAbout;
 	
 	private JToolBar mainToolBar;
+	private JButton toolBarOpen;
+	private JButton toolBarNew;
+	private JButton toolBarSave;
+	private JButton toolBarTokenize;
+	private JButton toolBarCompile;
+	private JButton toolBarExecute;
+	
+	JTabbedPane mainTabPane;
 	
 	public EditorJFrame(){
 		setTitle("Robotz");
 		setVisible(true);
 		initComponent();
 		setJMenuBar(mainMenu);
-		setBackground(new Color(40, 44, 49));
+		setBackground(Color.WHITE);
 		setSize(800, 600);
 		setPreferredSize(new Dimension(800, 600));
 		setMinimumSize(new Dimension(600, 400));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 	}
 	
 	private void initComponent() {
 		initMenu();
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		JTabbedPane mainTabPane = new JTabbedPane();
+		initToolbar();
+		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
-		JPanel symbolTablePanel = new JPanel();
+		JPanel symbolTablePanel = new JPanel(new FlowLayout());
 		JPanel animationPanel = new JPanel();
 		JTextPane textPane = new JTextPane();
+		LinePainter liPainter = new LinePainter(textPane);
+		liPainter.setColor(new Color(243, 235, 235));
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		TextLineNumber textLineNumber = new TextLineNumber(textPane);
 		scrollPane.setRowHeaderView(textLineNumber);
@@ -76,10 +96,17 @@ public class EditorJFrame extends JFrame implements EditorView {
 		mainTabPane.addTab("Editor", editorPanel);
 		mainTabPane.addTab("Symbol Table", symbolTablePanel);
 		mainTabPane.addTab("Animation", animationPanel);
-		mainToolBar = new JToolBar();
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
 		add(mainPanel);
+	}
+
+	private JPanel initMainPanal() {
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainTabPane = new JTabbedPane();
+		mainTabPane.setUI(new FlatTabbedPaneUI());
+		mainTabPane.setBackground(new Color(0, 121, 107));
+		return mainPanel;
 	}
 	
 	private void initMenu() {
@@ -155,97 +182,128 @@ public class EditorJFrame extends JFrame implements EditorView {
 		mnuHelp.add(mnuAbout);
 	}
 
-	public JMenuBar getMainMenu() {
-		return mainMenu;
+	public void setMnuOpenAction(Action action) {
+		mnuOpen.setAction(action);
 	}
 
-	public JMenu getMnuFile() {
-		return mnuFile;
+	public void setMnuNewAction(Action action) {
+		mnuNew.setAction(action);
 	}
 
-	public JMenuItem getMnuOpen() {
-		return mnuOpen;
+	public void setMnuSaveAction(Action action) {
+		mnuSave.setAction(action);
 	}
 
-	public JMenuItem getMnuNew() {
-		return mnuNew;
+	public void setMnuSaveAsAction(Action action) {
+		mnuSaveAs.setAction(action);
 	}
 
-	public JMenuItem getMnuSave() {
-		return mnuSave;
+	public void setMnuExitAction(Action action) {
+		mnuExit.setAction(action);
 	}
 
-	public JMenuItem getMnuSaveAs() {
-		return mnuSaveAs;
+	public void setMnuTokenizeAction(Action action) {
+		mnuTokenize.setAction(action);
 	}
 
-	public JMenuItem getMnuExit() {
-		return mnuExit;
+	public void setMnuCompileAction(Action action) {
+		mnuCompile.setAction(action);
 	}
 
-	public JMenu getMnuCommand() {
-		return mnuCommand;
+	public void setMnuExecuteAction(Action action) {
+		mnuExecute.setAction(action);
 	}
 
-	public JMenuItem getMnuTokenize() {
-		return mnuTokenize;
+	public void setMnuEditorAction(Action action) {
+		mnuEditor.setAction(action);
 	}
 
-	public JMenuItem getMnuCompile() {
-		return mnuCompile;
+	public void setMnuSymbolTableAction(Action action) {
+		mnuSymbolTable.setAction(action);
 	}
 
-	public JMenuItem getMnuExecute() {
-		return mnuExecute;
+	public void setMnuAnimationAction(Action action) {
+		mnuAnimation.setAction(action);
 	}
 
-	public JMenu getMnuView() {
-		return mnuView;
+	public void setMnuErrorAction(Action action) {
+		mnuError.setAction(action);
 	}
 
-	public JMenuItem getMnuEditor() {
-		return mnuEditor;
+	public void setMnuReleaseNoteAction(Action action) {
+		mnuReleaseNote.setAction(action);
 	}
 
-	public JMenuItem getMnuSymbolTable() {
-		return mnuSymbolTable;
+	public void setMnuShowIntroductionDialogAction(Action action) {
+		mnuShowIntroductionDialog.setAction(action);
 	}
 
-	public JMenuItem getMnuAnimation() {
-		return mnuAnimation;
-	}
-
-	public JMenuItem getMnuError() {
-		return mnuError;
-	}
-
-	public JMenu getMnuHelp() {
-		return mnuHelp;
-	}
-
-	public JMenuItem getMnuReleaseNote() {
-		return mnuReleaseNote;
-	}
-
-	public JMenuItem getMnuShowWelcomeDialog() {
-		return mnuShowIntroductionDialog;
-	}
-
-	public JMenuItem getMnuAbout() {
-		return mnuAbout;
+	public void setMnuAboutAction(Action action) {
+		mnuAbout.setAction(action);
 	}
 	
-	public JMenuItem getMnuConfig() {
-		return mnuConfig;
+	public void setMnuConfigAction(Action action) {
+		mnuConfig.setAction(action);
 	}
 	
-	public JToolBar getMainToolBar() {
-		return mainToolBar;
+	public void setTabIndex(int index) {
+		mainTabPane.setSelectedIndex(index);
+	}
+	
+	public int getTabIndex() {
+		return mainTabPane.getSelectedIndex();
+	}
+	
+	public void setTabChangeListener(ChangeListener listener) {
+		mainTabPane.addChangeListener(listener);
+	}
+	
+	private void initToolbar() {
+		mainToolBar = new JToolBar();
+		mainToolBar.setFloatable(false);
+		mainToolBar.setOrientation(JToolBar.HORIZONTAL);
+		String resourcesPath = getClass().getResource("resources").getPath() + "/";
+		toolBarNew = createToolBarButton("New", resourcesPath + "new.png");
+		toolBarOpen = createToolBarButton("Open", resourcesPath + "open.png");
+		toolBarSave = createToolBarButton("Save", resourcesPath + "save.png");
+		mainToolBar.add(new JToolBar.Separator());
+		toolBarTokenize = createToolBarButton("Tokenize", resourcesPath + "tokenize.png");
+		toolBarCompile = createToolBarButton("Compile", resourcesPath + "compile.png");
+		toolBarExecute = createToolBarButton("Execute", resourcesPath + "execute.png");
 	}
 
-	@Override
-	public void setController() {
-		
+	private JButton createToolBarButton(String title, String iconPath) {
+		JButton t = new JButton(title, new ImageIcon(iconPath));
+		t.setUI(new FlatToolBarButtonUI());
+		t.setVerticalTextPosition(SwingConstants.BOTTOM);
+		t.setHorizontalTextPosition(SwingConstants.CENTER);
+		t.setMargin(new Insets(6, 0, 0, 0));
+		mainToolBar.add(t);
+		return t;
 	}
-
+	
+	public void setToolBarNewAction(Action action) {
+		toolBarNew.setAction(action);
+	}
+	
+	public void setToolBarOpenAction(Action action) {
+		toolBarOpen.setAction(action);
+	}
+	
+	public void setToolBarSaveAction(Action action) {
+		toolBarSave.setAction(action);
+	}
+	
+	public void setToolBarTokenizeAction(Action action) {
+		toolBarTokenize.setAction(action);
+	}
+	
+	public void setToolBarCompileAction(Action action) {
+		toolBarCompile.setAction(action);
+	}
+	
+	public void setToolBarExecute(Action action) {
+		toolBarExecute.setAction(action);
+	}
+	
 }

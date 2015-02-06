@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.robotz.model.EditorModel;
 import com.robotz.view.EditorJFrame;
@@ -14,6 +16,7 @@ public class EditorController {
 	
 	private EditorJFrame frmMain;
 	private EditorModel editorModel;
+	private FileManager fileManager;
 	
 	private FileOpenAction fileOpenAction;
 	private FileNewAction fileNewAction;
@@ -36,7 +39,30 @@ public class EditorController {
 		frmMain = new EditorJFrame();
 		initAction();
 		assignMenuAction();
-		frmMain.getMainToolBar().add(fileNewAction);
+		assignToolBarAction();
+		frmMain.setTabChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				if (frmMain.getTabIndex() == 0) {
+					viewEditorAction.setEnabled(false);
+					viewSymbolTableAction.setEnabled(true);
+					viewAnimationAction.setEnabled(true);
+				}
+				else if (frmMain.getTabIndex() == 1) {
+					viewEditorAction.setEnabled(true);
+					viewSymbolTableAction.setEnabled(false);
+					viewAnimationAction.setEnabled(true);
+				}
+				else
+				{
+					viewEditorAction.setEnabled(true);
+					viewSymbolTableAction.setEnabled(true);
+					viewAnimationAction.setEnabled(false);
+				}
+			}
+			
+		});
 	}
 	
 	private void initAction(){
@@ -59,22 +85,31 @@ public class EditorController {
 	}
 	
 	private void assignMenuAction(){
-		frmMain.getMnuOpen().setAction(fileOpenAction);
-		frmMain.getMnuNew().setAction(fileNewAction);
-		frmMain.getMnuSave().setAction(fileSaveAction);
-		frmMain.getMnuSaveAs().setAction(fileSaveAsAction);
-		frmMain.getMnuExit().setAction(fileExitAction);
-		frmMain.getMnuTokenize().setAction(commandTokenizeAction);
-		frmMain.getMnuCompile().setAction(commandCompileAction);
-		frmMain.getMnuExecute().setAction(commandExecuteAction);
-		frmMain.getMnuEditor().setAction(viewEditorAction);
-		frmMain.getMnuSymbolTable().setAction(viewSymbolTableAction);
-		frmMain.getMnuAnimation().setAction(viewAnimationAction);
-		frmMain.getMnuError().setAction(viewErrorAction);
-		frmMain.getMnuConfig().setAction(viewConfigurationAction);
-		frmMain.getMnuReleaseNote().setAction(helpReleaseNoteAction);
-		frmMain.getMnuShowWelcomeDialog().setAction(helpShowAnIntroductionDialogAction);
-		frmMain.getMnuAbout().setAction(helpAboutMeAction);
+		frmMain.setMnuOpenAction(fileOpenAction);
+		frmMain.setMnuNewAction(fileNewAction);
+		frmMain.setMnuSaveAction(fileSaveAction);
+		frmMain.setMnuSaveAsAction(fileSaveAsAction);
+		frmMain.setMnuExitAction(fileExitAction);
+		frmMain.setMnuTokenizeAction(commandTokenizeAction);
+		frmMain.setMnuCompileAction(commandCompileAction);
+		frmMain.setMnuExecuteAction(commandExecuteAction);
+		frmMain.setMnuEditorAction(viewEditorAction);
+		frmMain.setMnuSymbolTableAction(viewSymbolTableAction);
+		frmMain.setMnuAnimationAction(viewAnimationAction);
+		frmMain.setMnuErrorAction(viewErrorAction);
+		frmMain.setMnuConfigAction(viewConfigurationAction);
+		frmMain.setMnuReleaseNoteAction(helpReleaseNoteAction);
+		frmMain.setMnuShowIntroductionDialogAction(helpShowAnIntroductionDialogAction);
+		frmMain.setMnuAboutAction(helpAboutMeAction);
+	}
+	
+	private void assignToolBarAction() {
+		frmMain.setToolBarNewAction(fileNewAction);
+		frmMain.setToolBarOpenAction(fileOpenAction);
+		frmMain.setToolBarSaveAction(fileSaveAction);
+		frmMain.setToolBarTokenizeAction(commandTokenizeAction);
+		frmMain.setToolBarCompileAction(commandCompileAction);
+		frmMain.setToolBarExecute(commandExecuteAction);
 	}
 	
 	private class FileNewAction extends AbstractAction {
@@ -82,7 +117,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private FileNewAction(){
-			super("New", new ImageIcon("./resources/new.png"));
+			super("New", new ImageIcon(frmMain.getClass().getResource("resources/new.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Create a new file");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_N);
@@ -101,7 +136,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private FileOpenAction(){
-			super("Open", new ImageIcon("./resources/open.png"));
+			super("Open", new ImageIcon(frmMain.getClass().getResource("resources/open.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Open an existed file");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_O);
@@ -120,7 +155,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private FileSaveAction(){
-			super("Save", new ImageIcon("./resources/save.png"));
+			super("Save", new ImageIcon(frmMain.getClass().getResource("resources/save.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Save a change");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_S);
@@ -140,7 +175,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private FileSaveAsAction(){
-			super("Save As", new ImageIcon("./resources/save.png"));
+			super("Save As", new ImageIcon(frmMain.getClass().getResource("resources/save.png")));
 			putValue(SHORT_DESCRIPTION, "Save a new file");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_A);
 		}
@@ -158,7 +193,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private FileExitAction(){
-			super("Exit", new ImageIcon("./resources/exit.png"));
+			super("Exit", new ImageIcon(frmMain.getClass().getResource("resources/exit.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
 			putValue(SHORT_DESCRIPTION, "Exit the program");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_X);
@@ -166,8 +201,7 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			System.exit(0);
 		}
 		
 	}
@@ -177,7 +211,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private CommandTokenizeAction(){
-			super("Tokenize", new ImageIcon("./resources/tokenize.png"));
+			super("Tokenize", new ImageIcon(frmMain.getClass().getResource("resources/tokenize.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Invoke a tokenizer");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_T);
@@ -196,7 +230,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private CommandCompileAction(){
-			super("Compile", new ImageIcon("./resources/compile.png"));
+			super("Compile", new ImageIcon(frmMain.getClass().getResource("resources/compile.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt C"));
 			putValue(SHORT_DESCRIPTION, "Invoke a compiler");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_P);
@@ -215,7 +249,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private CommandExecuteAction(){
-			super("Execute", new ImageIcon("./resources/execute.png"));
+			super("Execute", new ImageIcon(frmMain.getClass().getResource("resources/execute.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Execute the command(s)");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
@@ -234,16 +268,19 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private ViewEditorAction(){
-			super("Editor", new ImageIcon("./resources/editor.png"));
+			super("Editor", new ImageIcon(frmMain.getClass().getResource("resources/editor.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt E"));
 			putValue(SHORT_DESCRIPTION, "Switch to editor");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
+			setEnabled(false);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			frmMain.setTabIndex(0);
+			setEnabled(false);
+			viewSymbolTableAction.setEnabled(true);
+			viewAnimationAction.setEnabled(true);
 		}
 		
 	}
@@ -253,7 +290,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private ViewSymbolTableAction(){
-			super("Symbol Table", new ImageIcon("./resources/symbol_table.png"));
+			super("Symbol Table", new ImageIcon(frmMain.getClass().getResource("resources/symbol_table.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt S"));
 			putValue(SHORT_DESCRIPTION, "View a symbol table");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_Y);
@@ -261,8 +298,10 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			frmMain.setTabIndex(1);
+			setEnabled(false);
+			viewEditorAction.setEnabled(true);
+			viewAnimationAction.setEnabled(true);
 		}
 		
 	}
@@ -272,7 +311,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private ViewAnimationAction(){
-			super("Animation", new ImageIcon("./resources/animation.png"));
+			super("Animation", new ImageIcon(frmMain.getClass().getResource("resources/animation.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt A"));
 			putValue(SHORT_DESCRIPTION, "View an animation");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_M);
@@ -280,8 +319,10 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			frmMain.setTabIndex(2);
+			setEnabled(false);
+			viewEditorAction.setEnabled(true);
+			viewSymbolTableAction.setEnabled(true);
 		}
 		
 	}
@@ -291,7 +332,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private ViewErrorAction(){
-			super("Error", new ImageIcon("./resources/error_toolbar.png"));
+			super("Error", new ImageIcon(frmMain.getClass().getResource("resources/error_toolbar.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
 			putValue(SHORT_DESCRIPTION, "Show an error");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_R);
@@ -310,7 +351,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private ViewConfigurationAction(){
-			super("Configuration", new ImageIcon("./resources/configuration.png"));
+			super("Configuration", new ImageIcon(frmMain.getClass().getResource("resources/configuration.png")));
 			putValue(SHORT_DESCRIPTION, "View the configuation panel");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_G);
 		}
@@ -328,7 +369,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private HelpReleaseNoteAction(){
-			super("Release Note", new ImageIcon("./resources/release_note.png"));
+			super("Release Note", new ImageIcon(frmMain.getClass().getResource("resources/release_note.png")));
 			putValue(SHORT_DESCRIPTION, "View the release note");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_L);
 		}
@@ -346,7 +387,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private HelpShowAnIntroductionDialog(){
-			super("Show the introduction dialog", new ImageIcon("./resources/introduction.png"));
+			super("Show the introduction dialog", new ImageIcon(frmMain.getClass().getResource("resources/introduction.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("F1"));
 			putValue(SHORT_DESCRIPTION, "View the introduction dialog");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_I);
@@ -365,7 +406,7 @@ public class EditorController {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private HelpAboutMeAction(){
-			super("About Me", new ImageIcon("./resources/about_me.png"));
+			super("About Me", new ImageIcon(frmMain.getClass().getResource("resources/about_me.png")));
 			putValue(SHORT_DESCRIPTION, "View the developer's info");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_B);
 		}

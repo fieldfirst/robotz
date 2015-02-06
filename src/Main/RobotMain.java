@@ -1,11 +1,29 @@
 package Main;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import com.robotz.controller.EditorController;
 
 public class RobotMain {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (UnsupportedLookAndFeelException e) {
+		       // handle exception
+		}
+		catch (ClassNotFoundException e) {
+		       // handle exception
+		}
+		catch (InstantiationException e) {
+		       // handle exception
+		}
+		catch (IllegalAccessException e) {
+		       // handle exception
+		}
 		new EditorController();
 	}
 
