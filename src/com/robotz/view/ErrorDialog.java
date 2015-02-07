@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,8 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
-public class ErrorDialog extends JDialog{
+public class ErrorDialog extends FlatDialog{
 
 	private static final long serialVersionUID = -8771397140602186635L;
 	private static ErrorDialog instance;
@@ -33,8 +35,8 @@ public class ErrorDialog extends JDialog{
 		setUndecorated(true);
 		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		setLayout(new BorderLayout());
-		bgColor = new Color(229, 115, 115);
-		foregroundColor = new Color(183, 28, 28);
+		bgColor = new Color(239, 83, 80);
+		foregroundColor = Color.WHITE;
 		setBackground(bgColor);
 		initComponent();
 		initAction();
@@ -46,13 +48,14 @@ public class ErrorDialog extends JDialog{
 		return instance;
 	}
 	
-	private void initComponent() {
-		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+	protected final void initComponent() {
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		topPanel.setBackground(bgColor);
 		JLabel title = new JLabel("Error Console");
 		title.setForeground(foregroundColor);
 		topPanel.add(title);
 		add(topPanel, BorderLayout.NORTH);
-		JPanel centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		errorArea = new JTextArea();
 		errorArea.setText("There is no error :)");
 		errorArea.setBackground(bgColor);
@@ -60,15 +63,17 @@ public class ErrorDialog extends JDialog{
 		JScrollPane scrollPane = new JScrollPane(errorArea);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		centerPanel.add(errorArea);
+		scrollPane.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
+		centerPanel.add(scrollPane, BorderLayout.CENTER);
 		add(centerPanel, BorderLayout.CENTER);
-		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		bottomPanel.setBackground(bgColor);
 		closeButton = new JButton("Close");
 		bottomPanel.add(closeButton);
 		add(bottomPanel, BorderLayout.SOUTH);
 	}
 	
-	private void initAction() {
+	protected final void initAction() {
 		closeButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {

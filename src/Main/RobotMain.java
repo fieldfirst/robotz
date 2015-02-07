@@ -3,7 +3,7 @@ package Main;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.robotz.controller.EditorController;
+import com.robotz.controller.Controller;
 
 public class RobotMain {
 
@@ -24,7 +24,7 @@ public class RobotMain {
 		catch (IllegalAccessException e) {
 		       // handle exception
 		}
-		new EditorController();
+		new Controller();
 	}
 
 }

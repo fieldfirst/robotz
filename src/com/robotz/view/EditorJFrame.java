@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -24,6 +25,8 @@ import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 public class EditorJFrame extends JFrame {
 
@@ -64,7 +67,8 @@ public class EditorJFrame extends JFrame {
 	private JButton toolBarCompile;
 	private JButton toolBarExecute;
 	
-	JTabbedPane mainTabPane;
+	private JTextPane textPane;
+	private JTabbedPane mainTabPane;
 	
 	public EditorJFrame(){
 		setTitle("Robotz");
@@ -86,7 +90,7 @@ public class EditorJFrame extends JFrame {
 		JPanel editorPanel = new JPanel(new BorderLayout());
 		JPanel symbolTablePanel = new JPanel();
 		JPanel animationPanel = new JPanel();
-		JTextPane textPane = new JTextPane();
+		textPane = new JTextPane();
 		LinePainter liPainter = new LinePainter(textPane);
 		liPainter.setColor(new Color(243, 235, 235));
 		JScrollPane scrollPane = new JScrollPane(textPane);
@@ -98,6 +102,7 @@ public class EditorJFrame extends JFrame {
 		mainTabPane.addTab("Animation", animationPanel);
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
+		mainPanel.setBackground(Color.WHITE);
 		add(mainPanel);
 	}
 
@@ -260,28 +265,29 @@ public class EditorJFrame extends JFrame {
 	
 	private void initToolbar() {
 		mainToolBar = new JToolBar();
+		mainToolBar.setBackground(Color.WHITE);
 		mainToolBar.setFloatable(false);
 		mainToolBar.setOrientation(JToolBar.HORIZONTAL);
-		String resourcesPath = getClass().getResource("resources").getPath() + "/";
-		toolBarRobot = createToolBarButton("Robot", resourcesPath + "new.png");
-		toolBarObstacle = createToolBarButton("Obstacle", resourcesPath + "new.png");
-		toolBarError = createToolBarButton("Error", resourcesPath + "error_toolbar.png");
+		toolBarRobot = createToolBarButton("Robot", getClass().getResource("resources/robot.png"));
+		toolBarObstacle = createToolBarButton("Obstacle", getClass().getResource("resources/obstacle.png"));
+		toolBarError = createToolBarButton("Error", getClass().getResource("resources/error_toolbar.png"));
 		mainToolBar.add(new JToolBar.Separator());
-		toolBarNew = createToolBarButton("New", resourcesPath + "new.png");
-		toolBarOpen = createToolBarButton("Open", resourcesPath + "open.png");
-		toolBarSave = createToolBarButton("Save", resourcesPath + "save.png");
+		toolBarNew = createToolBarButton("New", getClass().getResource("resources/new.png"));
+		toolBarOpen = createToolBarButton("Open", getClass().getResource("resources/open.png"));
+		toolBarSave = createToolBarButton("Save", getClass().getResource("resources/save.png"));
 		mainToolBar.add(new JToolBar.Separator());
-		toolBarTokenize = createToolBarButton("Tokenize", resourcesPath + "tokenize.png");
-		toolBarCompile = createToolBarButton("Compile", resourcesPath + "compile.png");
-		toolBarExecute = createToolBarButton("Execute", resourcesPath + "execute.png");
+		toolBarTokenize = createToolBarButton("Tokenize", getClass().getResource("resources/tokenize.png"));
+		toolBarCompile = createToolBarButton("Compile", getClass().getResource("resources/compile.png"));
+		toolBarExecute = createToolBarButton("Execute", getClass().getResource("resources/execute.png"));
 	}
 
-	private JButton createToolBarButton(String title, String iconPath) {
+	private JButton createToolBarButton(String title, URL iconPath) {
 		JButton t = new JButton(title, new ImageIcon(iconPath));
 		t.setUI(new FlatToolBarButtonUI());
 		t.setVerticalTextPosition(SwingConstants.BOTTOM);
 		t.setHorizontalTextPosition(SwingConstants.CENTER);
 		t.setMargin(new Insets(6, 0, 0, 0));
+		t.setBackground(Color.WHITE);
 		mainToolBar.add(t);
 		return t;
 	}
@@ -320,6 +326,24 @@ public class EditorJFrame extends JFrame {
 	
 	public void setToolBarError(Action action) {
 		toolBarError.setAction(action);
+	}
+	
+	public String getTextPaneText() {
+		String allText = null;
+		try {
+			allText = textPane.getDocument().getText(0, textPane.getDocument().getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return allText;
+	}
+	
+	public void setTextPaneText(String text) {
+		textPane.setText(text);
+	}
+	
+	public void setTextPaneDocumentListener(DocumentListener listener) {
+		textPane.getDocument().addDocumentListener(listener);
 	}
 	
 }

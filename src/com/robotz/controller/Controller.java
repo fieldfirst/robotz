@@ -4,24 +4,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.robotz.model.EditorModel;
 import com.robotz.view.EditorJFrame;
 import com.robotz.view.ErrorDialog;
 
-public class EditorController {
+public class Controller {
 	
 	private EditorJFrame frmMain;
 	private EditorModel editorModel;
-	private FileManager fileManager;
 	private ErrorDialog errorDialog;
-	
 	
 	private FileOpenAction fileOpenAction;
 	private FileNewAction fileNewAction;
@@ -40,7 +49,7 @@ public class EditorController {
 	private HelpShowAnIntroductionDialog helpShowAnIntroductionDialogAction;
 	private HelpAboutMeAction helpAboutMeAction;
 	
-	public EditorController() {
+	public Controller() {
 		frmMain = new EditorJFrame();
 		initAction();
 		assignMenuAction();
@@ -74,6 +83,34 @@ public class EditorController {
 			public void componentMoved(ComponentEvent arg0) {
 				errorDialog.setLocationRelativeTo(frmMain);
 			}
+		});
+		
+		frmMain.setTextPaneDocumentListener(new DocumentListener(){
+
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				fileSaveAction.setEnabled(true);
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				fileSaveAction.setEnabled(true);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				fileSaveAction.setEnabled(true);
+			}
+			
+		});
+		
+		frmMain.addWindowListener(new WindowAdapter(){
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				
+			}
+			
 		});
 	}
 	
@@ -125,6 +162,21 @@ public class EditorController {
 		frmMain.setToolBarTokenizeAction(commandTokenizeAction);
 		frmMain.setToolBarCompileAction(commandCompileAction);
 		frmMain.setToolBarExecute(commandExecuteAction);
+	}
+	
+	private void saveFile(File file) {
+		BufferedWriter fileWriter;
+		try
+		{
+			fileWriter = new BufferedWriter(new FileWriter(file));
+			fileWriter.write(frmMain.getTextPaneText());
+			fileWriter.flush();
+			fileWriter.close();
+		}
+		catch (IOException e)
+		{
+				
+		}
 	}
 	
 	private class FileNewAction extends AbstractAction {
@@ -197,8 +249,31 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Save as");
+			fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			fc.setCurrentDirectory(workingDirectory);
+			if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+				File file = new File(fc.getSelectedFile() + ".robotz");
+				if (!file.exists())
+				{
+					saveFile(file);
+				}
+				else
+				{
+					int n = JOptionPane.showConfirmDialog(
+						    frmMain,
+						    "This file was already existed ?\nDo you want to replace it ?",
+						    "Overwrite Confirmation",
+						    JOptionPane.YES_NO_OPTION,
+						    JOptionPane.WARNING_MESSAGE);
+					if (n == JOptionPane.YES_OPTION) {
+						saveFile(file);
+					}
+				}
+			}
+			fileSaveAction.setEnabled(false);
 		}
 		
 	}
@@ -216,7 +291,20 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.exit(0);
+			if (!fileSaveAction.isEnabled())
+				System.exit(0);
+			else
+			{
+				int n = JOptionPane.showConfirmDialog(
+					    frmMain,
+					    "This file was edited ?\nDo you want to discard it ?",
+					    "Discard Confirmation",
+					    JOptionPane.YES_NO_OPTION,
+					    JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
 		}
 		
 	}
