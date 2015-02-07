@@ -1,5 +1,5 @@
-/**
- * 
+/***
+ * @author fieldfirst
  */
 package com.robotz.view;
 
@@ -69,7 +69,7 @@ public class EditorJFrame extends JFrame {
 	
 	private JTextPane textPane;
 	private JTabbedPane mainTabPane;
-	
+
 	public EditorJFrame(){
 		setTitle("Robotz");
 		setVisible(true);
@@ -91,6 +91,7 @@ public class EditorJFrame extends JFrame {
 		JPanel symbolTablePanel = new JPanel();
 		JPanel animationPanel = new JPanel();
 		textPane = new JTextPane();
+		textPane.setText("begin i j\n\nhalt");
 		LinePainter liPainter = new LinePainter(textPane);
 		liPainter.setColor(new Color(243, 235, 235));
 		JScrollPane scrollPane = new JScrollPane(textPane);
@@ -187,6 +188,7 @@ public class EditorJFrame extends JFrame {
 		mnuHelp.add(mnuAbout);
 	}
 
+	
 	public void setMnuOpenAction(Action action) {
 		mnuOpen.setAction(action);
 	}
@@ -286,7 +288,7 @@ public class EditorJFrame extends JFrame {
 		t.setUI(new FlatToolBarButtonUI());
 		t.setVerticalTextPosition(SwingConstants.BOTTOM);
 		t.setHorizontalTextPosition(SwingConstants.CENTER);
-		t.setMargin(new Insets(6, 0, 0, 0));
+		t.setMargin(new Insets(8, 12, 8, 12));
 		t.setBackground(Color.WHITE);
 		mainToolBar.add(t);
 		return t;
@@ -344,6 +346,23 @@ public class EditorJFrame extends JFrame {
 	
 	public void setTextPaneDocumentListener(DocumentListener listener) {
 		textPane.getDocument().addDocumentListener(listener);
+	}
+	
+	public void setInsertText(String text) {
+		try {
+			textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void setAppendText(String line) {
+		textPane.setText(textPane.getText() + line);
+	}
+	
+	public void repaintTextPane() {
+		textPane.repaint(10);
 	}
 	
 }

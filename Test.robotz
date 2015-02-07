@@ -1,0 +1,4 @@
+begin i j
+robot v a b
+obstacle a b
+halt

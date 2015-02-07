@@ -6,8 +6,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -48,6 +50,11 @@ public class Controller {
 	private HelpReleaseNoteAction helpReleaseNoteAction;
 	private HelpShowAnIntroductionDialog helpShowAnIntroductionDialogAction;
 	private HelpAboutMeAction helpAboutMeAction;
+	
+	private AddRobotAction addRobotAction;
+	private AddObstacleAction addObstacleAction;
+	
+	private String fileName = "";
 	
 	public Controller() {
 		frmMain = new EditorJFrame();
@@ -108,7 +115,41 @@ public class Controller {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				
+				if (!fileSaveAction.isEnabled())
+					System.exit(0);
+				else
+				{
+					int n = JOptionPane.showConfirmDialog(
+						    frmMain,
+						    "This file was edited ?\nDo you want to discard it ?",
+						    "Discard Confirmation",
+						    JOptionPane.YES_NO_OPTION,
+						    JOptionPane.WARNING_MESSAGE);
+					if (n == JOptionPane.YES_OPTION) {
+						System.exit(0);
+					}
+					else
+					{
+						File file = new File(fileName);
+						if (!file.exists())
+						{
+							JFileChooser fc = new JFileChooser();
+							fc.setDialogTitle("Save as");
+							fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+							File workingDirectory = new File(System.getProperty("user.dir"));
+							fc.setCurrentDirectory(workingDirectory);
+							if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+								File saveFile = new File(fc.getSelectedFile() + ".robotz");
+								saveFile(saveFile);
+							}
+						}
+						else
+						{
+							saveFile(file);
+						}
+						System.exit(0);
+					}
+				}
 			}
 			
 		});
@@ -131,6 +172,8 @@ public class Controller {
 		helpReleaseNoteAction = new HelpReleaseNoteAction();
 		helpShowAnIntroductionDialogAction = new HelpShowAnIntroductionDialog();
 		helpAboutMeAction = new HelpAboutMeAction();
+		addRobotAction = new AddRobotAction();
+		addObstacleAction = new AddObstacleAction();
 	}
 	
 	private void assignMenuAction(){
@@ -153,8 +196,8 @@ public class Controller {
 	}
 	
 	private void assignToolBarAction() {
-		//frmMain.setToolBarRobot();
-		//frmMain.setToolBarObstacle();
+		frmMain.setToolBarRobot(addRobotAction);
+		frmMain.setToolBarObstacle(addObstacleAction);
 		frmMain.setToolBarError(viewErrorAction);
 		frmMain.setToolBarNewAction(fileNewAction);
 		frmMain.setToolBarOpenAction(fileOpenAction);
@@ -168,7 +211,7 @@ public class Controller {
 		BufferedWriter fileWriter;
 		try
 		{
-			fileWriter = new BufferedWriter(new FileWriter(file));
+			fileWriter = new BufferedWriter(new FileWriter(file, false));
 			fileWriter.write(frmMain.getTextPaneText());
 			fileWriter.flush();
 			fileWriter.close();
@@ -192,7 +235,39 @@ public class Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
+			
+			if (fileSaveAction.isEnabled())
+			{
+				int n = JOptionPane.showConfirmDialog(
+					    frmMain,
+					    "This file was edited ?\nDo you want to discard it ?",
+					    "Discard Confirmation",
+					    JOptionPane.YES_NO_OPTION,
+					    JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.NO_OPTION) {
+					File file = new File(fileName);
+					if (!file.exists())
+					{
+						JFileChooser fc = new JFileChooser();
+						fc.setDialogTitle("Save as");
+						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+						File workingDirectory = new File(System.getProperty("user.dir"));
+						fc.setCurrentDirectory(workingDirectory);
+						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+							File saveFile = new File(fc.getSelectedFile() + ".robotz");
+							saveFile(saveFile);
+						}
+					}
+					else
+					{
+						saveFile(file);
+					}
+				}
+			}
+			
+			frmMain.setTextPaneText("begin i j\n\nhalt");
+			fileName = "";
+			fileSaveAction.setEnabled(false);
 			
 		}
 		
@@ -211,8 +286,61 @@ public class Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
+			if (fileSaveAction.isEnabled())
+			{
+				int n = JOptionPane.showConfirmDialog(
+					    frmMain,
+					    "This file was edited ?\nDo you want to discard it ?",
+					    "Discard Confirmation",
+					    JOptionPane.YES_NO_OPTION,
+					    JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.NO_OPTION) {
+					File file = new File(fileName);
+					if (!file.exists())
+					{
+						JFileChooser fc = new JFileChooser();
+						fc.setDialogTitle("Save as");
+						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+						File workingDirectory = new File(System.getProperty("user.dir"));
+						fc.setCurrentDirectory(workingDirectory);
+						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+							File saveFile = new File(fc.getSelectedFile() + ".robotz");
+							saveFile(saveFile);
+						}
+					}
+					else
+					{
+						saveFile(file);
+					}
+				}
+			}
 			
+			JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Open");
+			fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+			File workingDirectory = new File(System.getProperty("user.dir"));
+			fc.setCurrentDirectory(workingDirectory);
+			if (fc.showOpenDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+				frmMain.setTextPaneText("");
+				File file = new File(fc.getSelectedFile().getAbsolutePath());
+				fileName = fc.getSelectedFile().getAbsolutePath();
+				BufferedReader fileReader;
+				try
+				{
+					fileReader = new BufferedReader(new FileReader(file));
+					String line = null;
+					while ((line = fileReader.readLine()) != null) {
+						frmMain.setAppendText(line + "\n");
+					}
+					fileReader.close();
+					fileSaveAction.setEnabled(false);
+				}
+				catch (IOException e)
+				{
+					
+				}
+			}
+			frmMain.repaintTextPane();
 		}
 		
 	}
@@ -231,8 +359,24 @@ public class Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			File file = new File(fileName);
+			if (!file.exists())
+			{
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Save as");
+				fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				fc.setCurrentDirectory(workingDirectory);
+				if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+					File saveFile = new File(fc.getSelectedFile() + ".robotz");
+					saveFile(saveFile);
+				}
+			}
+			else
+			{
+				saveFile(file);
+			}
+			fileSaveAction.setEnabled(false);
 		}
 		
 	}
@@ -302,6 +446,27 @@ public class Controller {
 					    JOptionPane.YES_NO_OPTION,
 					    JOptionPane.WARNING_MESSAGE);
 				if (n == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+				else
+				{
+					File file = new File(fileName);
+					if (!file.exists())
+					{
+						JFileChooser fc = new JFileChooser();
+						fc.setDialogTitle("Save as");
+						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+						File workingDirectory = new File(System.getProperty("user.dir"));
+						fc.setCurrentDirectory(workingDirectory);
+						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+							File saveFile = new File(fc.getSelectedFile() + ".robotz");
+							saveFile(saveFile);
+						}
+					}
+					else
+					{
+						saveFile(file);
+					}
 					System.exit(0);
 				}
 			}
@@ -518,6 +683,40 @@ public class Controller {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			
+		}
+		
+	}
+	
+	private class AddRobotAction extends AbstractAction {
+
+		private static final long serialVersionUID = -957102144625612679L;
+		
+		private AddRobotAction(){
+			super("Robot", new ImageIcon(frmMain.getClass().getResource("resources/robot.png")));
+			putValue(SHORT_DESCRIPTION, "Add a new Robot");
+			//putValue(MNEMONIC_KEY, KeyEvent.VK_B);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			frmMain.setInsertText("robot v a b");
+		}
+		
+	}
+	
+	private class AddObstacleAction extends AbstractAction {
+
+		private static final long serialVersionUID = -957102144625612679L;
+		
+		private AddObstacleAction(){
+			super("Obstacle", new ImageIcon(frmMain.getClass().getResource("resources/obstacle.png")));
+			putValue(SHORT_DESCRIPTION, "Add a new Obstacle");
+			//putValue(MNEMONIC_KEY, KeyEvent.VK_B);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			frmMain.setInsertText("obstacle a b");
 		}
 		
 	}
