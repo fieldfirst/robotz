@@ -6,7 +6,6 @@ package com.robotz.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 
@@ -25,8 +24,6 @@ import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
-
-import com.robotz.controller.EditorController;
 
 public class EditorJFrame extends JFrame {
 
@@ -57,6 +54,9 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuAbout;
 	
 	private JToolBar mainToolBar;
+	private JButton toolBarRobot;
+	private JButton toolBarObstacle;
+	private JButton toolBarError;
 	private JButton toolBarOpen;
 	private JButton toolBarNew;
 	private JButton toolBarSave;
@@ -74,7 +74,7 @@ public class EditorJFrame extends JFrame {
 		setBackground(Color.WHITE);
 		setSize(800, 600);
 		setPreferredSize(new Dimension(800, 600));
-		setMinimumSize(new Dimension(600, 400));
+		setMinimumSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 	}
@@ -84,7 +84,7 @@ public class EditorJFrame extends JFrame {
 		initToolbar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
-		JPanel symbolTablePanel = new JPanel(new FlowLayout());
+		JPanel symbolTablePanel = new JPanel();
 		JPanel animationPanel = new JPanel();
 		JTextPane textPane = new JTextPane();
 		LinePainter liPainter = new LinePainter(textPane);
@@ -263,6 +263,10 @@ public class EditorJFrame extends JFrame {
 		mainToolBar.setFloatable(false);
 		mainToolBar.setOrientation(JToolBar.HORIZONTAL);
 		String resourcesPath = getClass().getResource("resources").getPath() + "/";
+		toolBarRobot = createToolBarButton("Robot", resourcesPath + "new.png");
+		toolBarObstacle = createToolBarButton("Obstacle", resourcesPath + "new.png");
+		toolBarError = createToolBarButton("Error", resourcesPath + "error_toolbar.png");
+		mainToolBar.add(new JToolBar.Separator());
 		toolBarNew = createToolBarButton("New", resourcesPath + "new.png");
 		toolBarOpen = createToolBarButton("Open", resourcesPath + "open.png");
 		toolBarSave = createToolBarButton("Save", resourcesPath + "save.png");
@@ -304,6 +308,18 @@ public class EditorJFrame extends JFrame {
 	
 	public void setToolBarExecute(Action action) {
 		toolBarExecute.setAction(action);
+	}
+	
+	public void setToolBarRobot(Action action) {
+		toolBarRobot.setAction(action);
+	}
+	
+	public void setToolBarObstacle(Action action) {
+		toolBarObstacle.setAction(action);
+	}
+	
+	public void setToolBarError(Action action) {
+		toolBarError.setAction(action);
 	}
 	
 }

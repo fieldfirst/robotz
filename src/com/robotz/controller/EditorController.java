@@ -1,6 +1,8 @@
 package com.robotz.controller;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
@@ -11,12 +13,15 @@ import javax.swing.event.ChangeListener;
 
 import com.robotz.model.EditorModel;
 import com.robotz.view.EditorJFrame;
+import com.robotz.view.ErrorDialog;
 
 public class EditorController {
 	
 	private EditorJFrame frmMain;
 	private EditorModel editorModel;
 	private FileManager fileManager;
+	private ErrorDialog errorDialog;
+	
 	
 	private FileOpenAction fileOpenAction;
 	private FileNewAction fileNewAction;
@@ -40,6 +45,7 @@ public class EditorController {
 		initAction();
 		assignMenuAction();
 		assignToolBarAction();
+		errorDialog = ErrorDialog.getInstance();
 		frmMain.setTabChangeListener(new ChangeListener(){
 
 			@Override
@@ -61,7 +67,13 @@ public class EditorController {
 					viewAnimationAction.setEnabled(false);
 				}
 			}
-			
+		});
+		
+		frmMain.addComponentListener(new ComponentAdapter(){
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+				errorDialog.setLocationRelativeTo(frmMain);
+			}
 		});
 	}
 	
@@ -104,6 +116,9 @@ public class EditorController {
 	}
 	
 	private void assignToolBarAction() {
+		//frmMain.setToolBarRobot();
+		//frmMain.setToolBarObstacle();
+		frmMain.setToolBarError(viewErrorAction);
 		frmMain.setToolBarNewAction(fileNewAction);
 		frmMain.setToolBarOpenAction(fileOpenAction);
 		frmMain.setToolBarSaveAction(fileSaveAction);
@@ -340,8 +355,8 @@ public class EditorController {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
+			errorDialog.setVisible(true);
+			errorDialog.setLocationRelativeTo(frmMain);
 		}
 		
 	}
