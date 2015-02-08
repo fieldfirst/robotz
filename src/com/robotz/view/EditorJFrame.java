@@ -1,6 +1,4 @@
-/***
- * @author fieldfirst
- */
+
 package com.robotz.view;
 
 import java.awt.BorderLayout;
@@ -27,6 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
+
+import Main.RobotMain;
 
 public class EditorJFrame extends JFrame {
 
@@ -57,6 +57,7 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuAbout;
 	
 	private JToolBar mainToolBar;
+	private Insets toolBarButtonInsets;
 	private JButton toolBarRobot;
 	private JButton toolBarObstacle;
 	private JButton toolBarError;
@@ -71,6 +72,7 @@ public class EditorJFrame extends JFrame {
 	private JTabbedPane mainTabPane;
 
 	public EditorJFrame(){
+		osSpecific();
 		setTitle("Robotz");
 		setVisible(true);
 		initComponent();
@@ -81,6 +83,13 @@ public class EditorJFrame extends JFrame {
 		setMinimumSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
+	}
+	
+	private void osSpecific() {
+		if (RobotMain.getOSName().contains("win"))
+			toolBarButtonInsets = new Insets(8, 12, 8, 12);
+		else if (RobotMain.getOSName().contains("mac"))
+			toolBarButtonInsets = new Insets(6, 0, 0, 0);
 	}
 	
 	private void initComponent() {
@@ -288,7 +297,7 @@ public class EditorJFrame extends JFrame {
 		t.setUI(new FlatToolBarButtonUI());
 		t.setVerticalTextPosition(SwingConstants.BOTTOM);
 		t.setHorizontalTextPosition(SwingConstants.CENTER);
-		t.setMargin(new Insets(8, 12, 8, 12));
+		t.setMargin(toolBarButtonInsets);
 		t.setBackground(Color.WHITE);
 		mainToolBar.add(t);
 		return t;
