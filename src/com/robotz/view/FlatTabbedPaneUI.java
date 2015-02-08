@@ -19,6 +19,20 @@ public class FlatTabbedPaneUI extends BasicTabbedPaneUI {
 		super();
 	}
 
+	
+	
+
+	@Override
+	protected int calculateTabWidth(int tabPlacement, int tabIndex,
+			FontMetrics metrics) {
+		if (RobotMain.getOSName().contains("mac"))
+			return super.calculateTabWidth(tabPlacement, tabIndex, metrics);
+		else
+		{
+			return super.calculateTabWidth(tabPlacement, tabIndex, metrics) + 16;
+		}
+	}
+
 	@Override
 	protected void paintTabBackground(Graphics g, int tabPlacement,
 			int tabIndex, int x, int y, int w, int h, boolean isSelected) {
@@ -33,7 +47,10 @@ public class FlatTabbedPaneUI extends BasicTabbedPaneUI {
 
 	@Override
 	protected Insets getContentBorderInsets(int tabPlacement) {
-		return new Insets(7, 0, 0, 0);
+		if (RobotMain.getOSName().contains("mac"))
+			return new Insets(7, 0, 0, 0);
+		else
+			return new Insets(4, 0, 0, 0);
 	}
 
 	@Override

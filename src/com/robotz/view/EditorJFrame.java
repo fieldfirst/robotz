@@ -87,7 +87,7 @@ public class EditorJFrame extends JFrame {
 	
 	private void osSpecific() {
 		if (RobotMain.getOSName().contains("win"))
-			toolBarButtonInsets = new Insets(8, 12, 8, 12);
+			toolBarButtonInsets = new Insets(8, 18, 8, 18);
 		else if (RobotMain.getOSName().contains("mac"))
 			toolBarButtonInsets = new Insets(6, 0, 0, 0);
 	}
