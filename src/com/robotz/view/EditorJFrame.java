@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -70,6 +71,8 @@ public class EditorJFrame extends JFrame {
 	
 	private JTextPane textPane;
 	private JTabbedPane mainTabPane;
+	
+	private SymbolTableModel symbolTableModel;
 
 	public EditorJFrame(){
 		osSpecific();
@@ -97,16 +100,10 @@ public class EditorJFrame extends JFrame {
 		initToolbar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
-		JPanel symbolTablePanel = new JPanel();
+		JPanel symbolTablePanel = new JPanel(new BorderLayout());
 		JPanel animationPanel = new JPanel();
-		textPane = new JTextPane();
-		textPane.setText("begin i j\n\nhalt");
-		LinePainter liPainter = new LinePainter(textPane);
-		liPainter.setColor(new Color(243, 235, 235));
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		TextLineNumber textLineNumber = new TextLineNumber(textPane);
-		scrollPane.setRowHeaderView(textLineNumber);
-		editorPanel.add(scrollPane, BorderLayout.CENTER);
+		editorPanel.add(initEditorPanel(), BorderLayout.CENTER);
+		symbolTablePanel.add(initSymbolTablePanel(), BorderLayout.CENTER);
 		mainTabPane.addTab("Editor", editorPanel);
 		mainTabPane.addTab("Symbol Table", symbolTablePanel);
 		mainTabPane.addTab("Animation", animationPanel);
@@ -114,6 +111,28 @@ public class EditorJFrame extends JFrame {
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
 		mainPanel.setBackground(Color.WHITE);
 		add(mainPanel);
+	}
+	
+	private JScrollPane initSymbolTablePanel() {
+		symbolTableModel = new SymbolTableModel();
+		JTable symbolTable = new JTable(symbolTableModel);
+		symbolTable.setFillsViewportHeight(true);
+		FlatCellRenderer fcr = new FlatCellRenderer();
+		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(0), fcr);
+		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(1), fcr);
+		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(2), fcr);
+		return new JScrollPane(symbolTable);
+	}
+
+	private JScrollPane initEditorPanel() {
+		textPane = new JTextPane();
+		textPane.setText("begin i j\n\nhalt");
+		LinePainter liPainter = new LinePainter(textPane);
+		liPainter.setColor(new Color(243, 235, 235));
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		TextLineNumber textLineNumber = new TextLineNumber(textPane);
+		scrollPane.setRowHeaderView(textLineNumber);
+		return scrollPane;
 	}
 
 	private JPanel initMainPanal() {
@@ -372,6 +391,14 @@ public class EditorJFrame extends JFrame {
 	
 	public void repaintTextPane() {
 		textPane.repaint(10);
+	}
+	
+	public void addTokenizeItem(String type, String chValue, int intValue) {
+		symbolTableModel.addItem(type, chValue, intValue);
+	}
+	
+	public void clearTokenizedItem() {
+		symbolTableModel.clearTable();
 	}
 	
 }

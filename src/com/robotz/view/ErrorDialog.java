@@ -86,4 +86,8 @@ public class ErrorDialog extends FlatDialog{
 		errorArea.append(error);
 	}
 	
+	public void clearError() {
+		errorArea.setText("");
+	}
+	
 }

@@ -2,10 +2,14 @@ package com.robotz.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
+
+import com.robotz.model.Token;
+import com.robotz.model.Tokenizer;
 
 public class CommandController extends Controller {
 	
@@ -35,6 +39,16 @@ public class CommandController extends Controller {
 
 		private static final long serialVersionUID = -957102144625612679L;
 		
+		private Tokenizer tokenizer;
+		private boolean hasError = false;
+		
+		// All tokens are stored here
+		private ArrayList<Token> tokens = new ArrayList<Token>();
+		
+		private final int ERROR = 0;
+		private final int VARIABLE_TYPE = 1;
+		private final int RESERVED_TYPE = 2;
+		
 		private CommandTokenizeAction(){
 			super("Tokenize", new ImageIcon(frmMain.getClass().getResource("resources/tokenize.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
@@ -44,8 +58,44 @@ public class CommandController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
+			// Lazy initialization
+			 if (tokenizer == null) {
+				 tokenizer = new Tokenizer();
+			 }
+			 
+			// Clear the tokens
+			 tokens.clear();
+			 frmMain.clearTokenizedItem();
+			 errorDialog.clearError();
+			 
+			// Check the tokens line by line
+			String[] textPaneText = frmMain.getTextPaneText().split("\n");
+			for (int i = 0; i < textPaneText.length; i++) {
+				tokenizer.setLine(textPaneText[i], i+1);
+				while (tokenizer.hasNextToken()) {
+					tokenizer.checkNextToken();
+					if (tokenizer.getLastType() == VARIABLE_TYPE) {
+						Token tk = tokenizer.getLastToken();
+						tokens.add(tk);
+						frmMain.addTokenizeItem(tk.getType(), tk.getCharValue(), tk.getIntValue());
+					}
+					else if (tokenizer.getLastType() == RESERVED_TYPE) {
+						tokens.add(tokenizer.getLastToken());
+					}
+					else if (tokenizer.getLastType() == ERROR) {
+						errorDialog.appendError(tokenizer.getLastError());
+						hasError = true;
+					}
+				}
+			}
+			if (hasError) {
+				errorDialog.setVisible(true);
+				errorDialog.setLocationRelativeTo(frmMain);
+				hasError = false;
+			}
 			
+			// Switch to the Symbol table tab
+			frmMain.setTabIndex(1);
 		}
 		
 	}
