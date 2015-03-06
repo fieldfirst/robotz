@@ -93,6 +93,9 @@ public class CommandController extends Controller {
 				errorDialog.setLocationRelativeTo(frmMain);
 				hasError = false;
 			}
+			else {
+				errorDialog.appendError("There is no error :)");
+			}
 			
 			// Switch to the Symbol table tab
 			frmMain.setTabIndex(1);

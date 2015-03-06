@@ -73,6 +73,7 @@ public class EditorJFrame extends JFrame {
 	private JTabbedPane mainTabPane;
 	
 	private SymbolTableModel symbolTableModel;
+	private AnimationPanel animationPanel;
 
 	public EditorJFrame(){
 		osSpecific();
@@ -101,7 +102,7 @@ public class EditorJFrame extends JFrame {
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
 		JPanel symbolTablePanel = new JPanel(new BorderLayout());
-		JPanel animationPanel = new JPanel();
+		animationPanel = new AnimationPanel();
 		editorPanel.add(initEditorPanel(), BorderLayout.CENTER);
 		symbolTablePanel.add(initSymbolTablePanel(), BorderLayout.CENTER);
 		mainTabPane.addTab("Editor", editorPanel);
@@ -399,6 +400,10 @@ public class EditorJFrame extends JFrame {
 	
 	public void clearTokenizedItem() {
 		symbolTableModel.clearTable();
+	}
+	
+	public AnimationPanel getAnimationPanel() {
+		return animationPanel;
 	}
 	
 }

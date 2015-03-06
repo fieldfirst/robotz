@@ -41,6 +41,7 @@ public class ViewController extends Controller {
 				}
 				else
 				{
+					animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
 					viewEditorAction.setEnabled(true);
 					viewSymbolTableAction.setEnabled(true);
 					viewAnimationAction.setEnabled(false);
@@ -117,6 +118,7 @@ public class ViewController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
 			frmMain.setTabIndex(2);
 			setEnabled(false);
 			viewEditorAction.setEnabled(true);

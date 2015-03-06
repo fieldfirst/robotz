@@ -250,6 +250,7 @@ public class FileController extends Controller {
 				}
 			}
 			frmMain.repaintTextPane();
+			frmMain.setTabIndex(0);
 		}
 		
 	}

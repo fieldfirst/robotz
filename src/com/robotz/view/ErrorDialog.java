@@ -27,8 +27,8 @@ public class ErrorDialog extends FlatDialog{
 	private JTextArea errorArea;
 	
 	private ErrorDialog() {
-		setPreferredSize(new Dimension(400, 400));
-		setMinimumSize(new Dimension(400, 400));
+		setPreferredSize(new Dimension(650, 400));
+		setMinimumSize(new Dimension(650, 400));
 		setTitle("Error console");
 		setVisible(false);
 		setAlwaysOnTop(true);
@@ -49,28 +49,33 @@ public class ErrorDialog extends FlatDialog{
 	}
 	
 	protected final void initComponent() {
+		JPanel mainPanel = new JPanel(new BorderLayout());
 		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		topPanel.setBackground(bgColor);
 		JLabel title = new JLabel("Error Console");
 		title.setForeground(foregroundColor);
 		topPanel.add(title);
-		add(topPanel, BorderLayout.NORTH);
+		mainPanel.add(topPanel, BorderLayout.NORTH);
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		errorArea = new JTextArea();
 		errorArea.setText("There is no error :)");
 		errorArea.setBackground(bgColor);
 		errorArea.setForeground(foregroundColor);
+		errorArea.setLineWrap(true);
+		errorArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(errorArea);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
 		centerPanel.add(scrollPane, BorderLayout.CENTER);
-		add(centerPanel, BorderLayout.CENTER);
+		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		bottomPanel.setBackground(bgColor);
 		closeButton = new JButton("Close");
 		bottomPanel.add(closeButton);
-		add(bottomPanel, BorderLayout.SOUTH);
+		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+		mainPanel.setOpaque(false);
+		add(mainPanel);
 	}
 	
 	protected final void initAction() {
@@ -83,7 +88,7 @@ public class ErrorDialog extends FlatDialog{
 	}
 	
 	public void appendError(String error) {
-		errorArea.append(error);
+		errorArea.append(error + "\n\n");
 	}
 	
 	public void clearError() {
