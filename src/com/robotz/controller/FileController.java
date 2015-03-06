@@ -131,6 +131,13 @@ public class FileController extends Controller {
 		}
 	}
 	
+	private void preparation() {
+		frmMain.setTabIndex(0);
+		errorDialog.clearError();
+		errorDialog.appendError("There is no error :)");
+		frmMain.clearTokenizedItem();
+	}
+	
 	private class FileNewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
@@ -178,6 +185,7 @@ public class FileController extends Controller {
 			fileName = "";
 			fileSaveAction.setEnabled(false);
 			
+			preparation();
 		}
 		
 	}
@@ -250,7 +258,8 @@ public class FileController extends Controller {
 				}
 			}
 			frmMain.repaintTextPane();
-			frmMain.setTabIndex(0);
+			
+			preparation();
 		}
 		
 	}

@@ -1,0 +1,23 @@
+begin 30 40
+;;
+;;;
+obstacle 20 30 ;
+obstacle; 70 40 ;
+
+robot jo$hn 3 4 ;
+
+wall = 159999999 ;
+
+doooooooo
+    obstacle wall a ;
+    add 5 to a ;
+until a *> 20 ;
+
+    *- run = 9 ;
+
+    *- move john south run ; -*
+move john west 2 ;
+
+move john west 4 ;
+
+halt
