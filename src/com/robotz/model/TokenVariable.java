@@ -6,6 +6,17 @@ public class TokenVariable implements Token {
 	private String charValue;
 	private String type;
 	
+	/***
+	 * Constructor of TokenVariable
+	 * 
+	 * This represents a token for a variable.
+	 * 
+	 * 
+	 * @param type - the type of the token (default value is "v")
+	 * @param charValue - token's char value
+	 * 
+	 */
+	
 	public TokenVariable(String type, String charValue) {
 		this.type = type;
 		this.charValue = charValue;

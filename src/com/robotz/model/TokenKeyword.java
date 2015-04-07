@@ -6,6 +6,14 @@ public class TokenKeyword implements Token {
 	private String charValue;	// in this case character value return null
 	private String type;
 	
+	/***
+	 * Constructor of TokenKeyword
+	 * 
+	 * This represents a token for a reserved keyword.
+	 * 
+	 * @param type - the type of the token (depend on the reserved keyword)
+	 */
+	
 	public TokenKeyword(String type) {
 		this.type = type;
 		this.charValue = null;

@@ -6,6 +6,15 @@ public class TokenInteger implements Token {
 	private String charValue;
 	private String type;
 	
+	/***
+	 * Constructor of TokenInteger
+	 * 
+	 * This represents a token for an integer.
+	 * 
+	 * @param type - the type of the token (default value is "i")
+	 * @param charValue - token's char value
+	 * @param intValue - token's integer value
+	 */
 	public TokenInteger(String type, String charValue, int intValue) {
 		this.type = type;
 		this.charValue = charValue;

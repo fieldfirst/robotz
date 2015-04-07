@@ -29,14 +29,24 @@ public class Tokenizer {
 	private final String TOO_LONG_VAR = "^[\\w\\d]{9,}$";
 	private final String UNEND_COMMENT = "\\*-";
 	
-	public void setLine(String recvToken, int lineNumber) {
+	/***
+	 * Receive a line of string, then tokenizes the string
+	 * 
+	 * @param lineString - the input string which is separated by line
+	 * @param lineNumber - set the current processing line number
+	 */
+	
+	public void setLine(String lineString, int lineNumber) {
 		// Eliminate the comment parts with an empty string
-		recvToken = recvToken.replaceAll(COMMENT_PART, "");
-		lineTokenizer = new StringTokenizer(recvToken, " ");
+		lineString = lineString.replaceAll(COMMENT_PART, "");
+		lineTokenizer = new StringTokenizer(lineString, " ");
 		this.currentLineNumber = lineNumber;
 		notSkipLine = true;
 	}
 	
+	/***
+	 *  Process the next token
+	 */
 	public void checkNextToken() {
 		// Get a token then convert to the lower case
 		String tk = lineTokenizer.nextToken().toLowerCase().trim();
@@ -93,6 +103,11 @@ public class Tokenizer {
 	public int getLastType() {
 		return lastType;
 	}
+	
+	/***
+	 * Checking for an available token.
+	 * @return - true if the current line is still need to be processed
+	 */
 	
 	public boolean hasNextToken() {
 		return (lineTokenizer.hasMoreTokens() && notSkipLine);
