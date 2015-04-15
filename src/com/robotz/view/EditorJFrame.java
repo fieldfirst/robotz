@@ -405,5 +405,5 @@ public class EditorJFrame extends JFrame {
 	public AnimationPanel getAnimationPanel() {
 		return animationPanel;
 	}
-	
+
 }

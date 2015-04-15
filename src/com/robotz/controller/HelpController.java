@@ -30,8 +30,8 @@ public class HelpController extends Controller {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private HelpReleaseNoteAction(){
-			super("Release Note", new ImageIcon(frmMain.getClass().getResource("resources/release_note.png")));
-			putValue(SHORT_DESCRIPTION, "View the release note");
+			super("Acknowledgement", new ImageIcon(frmMain.getClass().getResource("resources/release_note.png")));
+			putValue(SHORT_DESCRIPTION, "View the acknowledgement");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_L);
 		}
 
@@ -48,9 +48,9 @@ public class HelpController extends Controller {
 		private static final long serialVersionUID = -957102144625612679L;
 		
 		private HelpShowAnIntroductionDialog(){
-			super("Show the introduction dialog", new ImageIcon(frmMain.getClass().getResource("resources/introduction.png")));
+			super("User's Manual", new ImageIcon(frmMain.getClass().getResource("resources/introduction.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("F1"));
-			putValue(SHORT_DESCRIPTION, "View the introduction dialog");
+			putValue(SHORT_DESCRIPTION, "View the User's manual");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_I);
 		}
 

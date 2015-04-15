@@ -78,14 +78,7 @@ public class FileController extends Controller {
 						File file = new File(fileName);
 						if (!file.exists())
 						{
-							JFileChooser fc = new JFileChooser();
-							fc.setDialogTitle("Save as");
-							fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-							File workingDirectory = new File(System.getProperty("user.dir"));
-							fc.setCurrentDirectory(workingDirectory);
-							if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-								File saveFile = new File(fc.getSelectedFile() + ".robotz");
-								saveFile(saveFile);
+							if (saveAs()) {
 								System.exit(0);
 							}
 						}
@@ -131,6 +124,44 @@ public class FileController extends Controller {
 		}
 	}
 	
+	private boolean saveAs() {
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Save as");
+		fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+		File workingDirectory = new File(System.getProperty("user.dir"));
+		fc.setCurrentDirectory(workingDirectory);
+		int result = fc.showSaveDialog(frmMain);
+		if (result == JFileChooser.APPROVE_OPTION) {
+			File file = new File(fc.getSelectedFile() + ".robotz");
+			if (!file.exists())
+			{
+				saveFile(file);
+				fileSaveAction.setEnabled(false);
+				fileName = fc.getSelectedFile().getAbsolutePath() + ".robotz";
+			}
+			else
+			{
+				int n = JOptionPane.showConfirmDialog(
+					    frmMain,
+					    "This file was already existed ?\nDo you want to replace it ?",
+					    "Overwrite Confirmation",
+					    JOptionPane.YES_NO_OPTION,
+					    JOptionPane.WARNING_MESSAGE);
+				if (n == JOptionPane.YES_OPTION) {
+					saveFile(file);
+					fileSaveAction.setEnabled(false);
+					fileName = fc.getSelectedFile().getAbsolutePath() + ".robotz";
+				}
+				else {
+					saveAs();
+				}
+			}
+		} else if (result == JFileChooser.CANCEL_OPTION) {
+			return false;
+		}
+		return true;
+	}
+	
 	private void preparation() {
 		frmMain.setTabIndex(0);
 		errorDialog.clearError();
@@ -152,6 +183,8 @@ public class FileController extends Controller {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			
+			boolean isSaveSuccessful = true;
+			
 			if (fileSaveAction.isEnabled())
 			{
 				int n = JOptionPane.showConfirmDialog(
@@ -164,15 +197,7 @@ public class FileController extends Controller {
 					File file = new File(fileName);
 					if (!file.exists())
 					{
-						JFileChooser fc = new JFileChooser();
-						fc.setDialogTitle("Save as");
-						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-						File workingDirectory = new File(System.getProperty("user.dir"));
-						fc.setCurrentDirectory(workingDirectory);
-						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-							File saveFile = new File(fc.getSelectedFile() + ".robotz");
-							saveFile(saveFile);
-						}
+						isSaveSuccessful = saveAs();
 					}
 					else
 					{
@@ -181,11 +206,12 @@ public class FileController extends Controller {
 				}
 			}
 			
-			frmMain.setTextPaneText("begin i j\n\nhalt");
-			fileName = "";
-			fileSaveAction.setEnabled(false);
-			
-			preparation();
+			if (isSaveSuccessful) {
+				frmMain.setTextPaneText("begin i j\n\nhalt");
+				fileName = "";
+				fileSaveAction.setEnabled(false);
+				preparation();
+			}
 		}
 		
 	}
@@ -203,6 +229,9 @@ public class FileController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			boolean isSaveSuccessful = true;
+			
 			if (fileSaveAction.isEnabled())
 			{
 				int n = JOptionPane.showConfirmDialog(
@@ -215,51 +244,44 @@ public class FileController extends Controller {
 					File file = new File(fileName);
 					if (!file.exists())
 					{
-						JFileChooser fc = new JFileChooser();
-						fc.setDialogTitle("Save as");
-						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-						File workingDirectory = new File(System.getProperty("user.dir"));
-						fc.setCurrentDirectory(workingDirectory);
-						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-							File saveFile = new File(fc.getSelectedFile() + ".robotz");
-							saveFile(saveFile);
-						}
+						isSaveSuccessful = saveAs();
 					}
 					else
 					{
 						saveFile(file);
+						fileSaveAction.setEnabled(false);
 					}
 				}
 			}
-			
-			JFileChooser fc = new JFileChooser();
-			fc.setDialogTitle("Open");
-			fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-			File workingDirectory = new File(System.getProperty("user.dir"));
-			fc.setCurrentDirectory(workingDirectory);
-			if (fc.showOpenDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-				frmMain.setTextPaneText("");
-				File file = new File(fc.getSelectedFile().getAbsolutePath());
-				fileName = fc.getSelectedFile().getAbsolutePath();
-				BufferedReader fileReader;
-				try
-				{
-					fileReader = new BufferedReader(new FileReader(file));
-					String line = null;
-					while ((line = fileReader.readLine()) != null) {
-						frmMain.setAppendText(line + "\n");
+			if (isSaveSuccessful) {
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Open");
+				fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				fc.setCurrentDirectory(workingDirectory);
+				if (fc.showOpenDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
+					frmMain.setTextPaneText("");
+					File file = new File(fc.getSelectedFile().getAbsolutePath());
+					fileName = fc.getSelectedFile().getAbsolutePath();
+					BufferedReader fileReader;
+					try
+					{
+						fileReader = new BufferedReader(new FileReader(file));
+						String line = null;
+						while ((line = fileReader.readLine()) != null) {
+							frmMain.setAppendText(line + "\n");
+						}
+						fileReader.close();
+						fileSaveAction.setEnabled(false);
+						frmMain.repaintTextPane();
+						preparation();
 					}
-					fileReader.close();
-					fileSaveAction.setEnabled(false);
-				}
-				catch (IOException e)
-				{
+					catch (IOException e)
+					{
 					
+					}
 				}
 			}
-			frmMain.repaintTextPane();
-			
-			preparation();
 		}
 		
 	}
@@ -281,21 +303,13 @@ public class FileController extends Controller {
 			File file = new File(fileName);
 			if (!file.exists())
 			{
-				JFileChooser fc = new JFileChooser();
-				fc.setDialogTitle("Save as");
-				fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				fc.setCurrentDirectory(workingDirectory);
-				if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-					File saveFile = new File(fc.getSelectedFile() + ".robotz");
-					saveFile(saveFile);
-				}
+				saveAs();
 			}
 			else
 			{
 				saveFile(file);
+				fileSaveAction.setEnabled(false);
 			}
-			fileSaveAction.setEnabled(false);
 		}
 		
 	}
@@ -312,31 +326,7 @@ public class FileController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			JFileChooser fc = new JFileChooser();
-			fc.setDialogTitle("Save as");
-			fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-			File workingDirectory = new File(System.getProperty("user.dir"));
-			fc.setCurrentDirectory(workingDirectory);
-			if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-				File file = new File(fc.getSelectedFile() + ".robotz");
-				if (!file.exists())
-				{
-					saveFile(file);
-				}
-				else
-				{
-					int n = JOptionPane.showConfirmDialog(
-						    frmMain,
-						    "This file was already existed ?\nDo you want to replace it ?",
-						    "Overwrite Confirmation",
-						    JOptionPane.YES_NO_OPTION,
-						    JOptionPane.WARNING_MESSAGE);
-					if (n == JOptionPane.YES_OPTION) {
-						saveFile(file);
-					}
-				}
-			}
-			fileSaveAction.setEnabled(false);
+			saveAs();
 		}
 		
 	}
@@ -372,14 +362,7 @@ public class FileController extends Controller {
 					File file = new File(fileName);
 					if (!file.exists())
 					{
-						JFileChooser fc = new JFileChooser();
-						fc.setDialogTitle("Save as");
-						fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
-						File workingDirectory = new File(System.getProperty("user.dir"));
-						fc.setCurrentDirectory(workingDirectory);
-						if (fc.showSaveDialog(frmMain) == JFileChooser.APPROVE_OPTION) {
-							File saveFile = new File(fc.getSelectedFile() + ".robotz");
-							saveFile(saveFile);
+						if (saveAs()) {
 							System.exit(0);
 						}
 					}
