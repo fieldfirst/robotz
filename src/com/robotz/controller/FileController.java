@@ -138,6 +138,7 @@ public class FileController extends Controller {
 				saveFile(file);
 				fileSaveAction.setEnabled(false);
 				fileName = fc.getSelectedFile().getAbsolutePath() + ".robotz";
+				frmMain.setEditorTitle(fileName.replace(".robotz", ""));
 			}
 			else
 			{
@@ -151,6 +152,7 @@ public class FileController extends Controller {
 					saveFile(file);
 					fileSaveAction.setEnabled(false);
 					fileName = fc.getSelectedFile().getAbsolutePath() + ".robotz";
+					frmMain.setEditorTitle(fileName.replace(".robotz", ""));
 				}
 				else {
 					saveAs();
@@ -208,6 +210,7 @@ public class FileController extends Controller {
 			
 			if (isSaveSuccessful) {
 				frmMain.setTextPaneText("begin i j\n\nhalt");
+				frmMain.setEditorTitle("New file");
 				fileName = "";
 				fileSaveAction.setEnabled(false);
 				preparation();
@@ -263,6 +266,7 @@ public class FileController extends Controller {
 					frmMain.setTextPaneText("");
 					File file = new File(fc.getSelectedFile().getAbsolutePath());
 					fileName = fc.getSelectedFile().getAbsolutePath();
+					frmMain.setEditorTitle(fileName.replace(".robotz", ""));
 					BufferedReader fileReader;
 					try
 					{

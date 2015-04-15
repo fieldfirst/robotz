@@ -77,7 +77,7 @@ public class EditorJFrame extends JFrame {
 
 	public EditorJFrame(){
 		osSpecific();
-		setTitle("Robotz");
+		setTitle("Robotz - New file");
 		setVisible(true);
 		initComponent();
 		setJMenuBar(mainMenu);
@@ -404,6 +404,10 @@ public class EditorJFrame extends JFrame {
 	
 	public AnimationPanel getAnimationPanel() {
 		return animationPanel;
+	}
+	
+	public void setEditorTitle(String fileName) {
+		setTitle("Robotz - " + fileName);
 	}
 
 }
