@@ -5,6 +5,7 @@ public class TokenKeyword implements Token {
 	private int intValue;		// in this case integer value return null
 	private String charValue;	// in this case character value return null
 	private String type;
+	private int lineNumber;
 	
 	/***
 	 * Constructor of TokenKeyword
@@ -14,9 +15,10 @@ public class TokenKeyword implements Token {
 	 * @param type - the type of the token (depend on the reserved keyword)
 	 */
 	
-	public TokenKeyword(String type) {
+	public TokenKeyword(String type, String charValue, int lineNumber) {
 		this.type = type;
-		this.charValue = null;
+		this.charValue = charValue;
+		this.lineNumber = lineNumber;
 	}
 	
 	@Override
@@ -32,6 +34,11 @@ public class TokenKeyword implements Token {
 	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public int getLineNumber() {
+		return lineNumber;
 	}
 
 }

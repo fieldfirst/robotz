@@ -32,6 +32,8 @@ public class AddController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			// Force switch to the Editor tab then append this string at the current cursor position
+			frmMain.setTabIndex(0);
 			frmMain.setInsertText("robot v a b");
 		}
 		
@@ -49,6 +51,8 @@ public class AddController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			// Force switch to the Editor tab then append this string at the current cursor position
+			frmMain.setTabIndex(0);
 			frmMain.setInsertText("obstacle a b");
 		}
 		

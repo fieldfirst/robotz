@@ -1,0 +1,6 @@
+*- program -*
+
+begin 100 80
+robot bob 10 9 ;
+move bob east 6 ;
+halt

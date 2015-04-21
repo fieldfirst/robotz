@@ -22,7 +22,6 @@ public class SymbolTableModel extends AbstractTableModel {
 	public int getColumnCount() {
 		return columnNames.length;
 	}
-
 	@Override
 	public int getRowCount() {
 		return data.size();

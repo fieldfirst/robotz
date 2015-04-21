@@ -5,9 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -39,7 +38,6 @@ public class ErrorDialog extends FlatDialog{
 		foregroundColor = Color.WHITE;
 		setBackground(bgColor);
 		initComponent();
-		initAction();
 	}
 
 	public static ErrorDialog getInstance() {
@@ -78,13 +76,8 @@ public class ErrorDialog extends FlatDialog{
 		add(mainPanel);
 	}
 	
-	protected final void initAction() {
-		closeButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);		
-			}	
-		});
+	public void setbtnCloseAction(Action action) {
+		closeButton.addActionListener(action);
 	}
 	
 	public void appendError(String error) {

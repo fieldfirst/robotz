@@ -5,6 +5,7 @@ public class TokenInteger implements Token {
 	private int intValue;
 	private String charValue;
 	private String type;
+	private int lineNumber;
 	
 	/***
 	 * Constructor of TokenInteger
@@ -15,10 +16,11 @@ public class TokenInteger implements Token {
 	 * @param charValue - token's char value
 	 * @param intValue - token's integer value
 	 */
-	public TokenInteger(String type, String charValue, int intValue) {
+	public TokenInteger(String type, String charValue, int intValue, int lineNumber) {
 		this.type = type;
 		this.charValue = charValue;
 		this.intValue = intValue;
+		this.lineNumber = lineNumber;
 	}
 	
 	@Override
@@ -34,6 +36,11 @@ public class TokenInteger implements Token {
 	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public int getLineNumber() {
+		return lineNumber;
 	}
 
 }

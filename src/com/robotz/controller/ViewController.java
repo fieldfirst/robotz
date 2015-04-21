@@ -14,6 +14,7 @@ public class ViewController extends Controller {
 	
 	private ViewEditorAction viewEditorAction;
 	private ViewSymbolTableAction viewSymbolTableAction;
+	private ViewDerivationAction viewDerivationAction;
 	private ViewAnimationAction viewAnimationAction;
 	private ViewConfigurationAction viewConfigurationAction;
 	private ViewErrorAction viewErrorAction;
@@ -21,6 +22,7 @@ public class ViewController extends Controller {
 	protected void initAction() {
 		viewEditorAction = new ViewEditorAction();
 		viewSymbolTableAction = new ViewSymbolTableAction();
+		viewDerivationAction = new ViewDerivationAction();
 		viewAnimationAction = new ViewAnimationAction();
 		viewConfigurationAction = new ViewConfigurationAction();
 		viewErrorAction = new ViewErrorAction();
@@ -32,11 +34,19 @@ public class ViewController extends Controller {
 				if (frmMain.getTabIndex() == 0) {
 					viewEditorAction.setEnabled(false);
 					viewSymbolTableAction.setEnabled(true);
+					viewDerivationAction.setEnabled(true);
 					viewAnimationAction.setEnabled(true);
 				}
 				else if (frmMain.getTabIndex() == 1) {
 					viewEditorAction.setEnabled(true);
 					viewSymbolTableAction.setEnabled(false);
+					viewDerivationAction.setEnabled(true);
+					viewAnimationAction.setEnabled(true);
+				}
+				else if (frmMain.getTabIndex() == 2) {
+					viewEditorAction.setEnabled(true);
+					viewSymbolTableAction.setEnabled(true);
+					viewDerivationAction.setEnabled(false);
 					viewAnimationAction.setEnabled(true);
 				}
 				else
@@ -44,6 +54,7 @@ public class ViewController extends Controller {
 					animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
 					viewEditorAction.setEnabled(true);
 					viewSymbolTableAction.setEnabled(true);
+					viewDerivationAction.setEnabled(true);
 					viewAnimationAction.setEnabled(false);
 				}
 			}
@@ -52,6 +63,7 @@ public class ViewController extends Controller {
 	
 	protected void assignMenuAction() {
 		frmMain.setMnuEditorAction(viewEditorAction);
+		frmMain.setMnuDerivationAction(viewDerivationAction);
 		frmMain.setMnuSymbolTableAction(viewSymbolTableAction);
 		frmMain.setMnuAnimationAction(viewAnimationAction);
 		frmMain.setMnuErrorAction(viewErrorAction);
@@ -79,6 +91,7 @@ public class ViewController extends Controller {
 			frmMain.setTabIndex(0);
 			setEnabled(false);
 			viewSymbolTableAction.setEnabled(true);
+			viewDerivationAction.setEnabled(true);
 			viewAnimationAction.setEnabled(true);
 		}
 		
@@ -100,9 +113,31 @@ public class ViewController extends Controller {
 			frmMain.setTabIndex(1);
 			setEnabled(false);
 			viewEditorAction.setEnabled(true);
+			viewDerivationAction.setEnabled(true);
 			viewAnimationAction.setEnabled(true);
 		}
 		
+	}
+	
+	private class ViewDerivationAction extends AbstractAction {
+		
+		private static final long serialVersionUID = -957102144625612679L;
+		
+		private ViewDerivationAction(){
+			super("Derivation", new ImageIcon(frmMain.getClass().getResource("resources/derivation_table.png")));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
+			putValue(SHORT_DESCRIPTION, "View a derivation table");
+			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			frmMain.setTabIndex(2);
+			setEnabled(false);
+			viewEditorAction.setEnabled(true);
+			viewSymbolTableAction.setEnabled(true);
+			viewAnimationAction.setEnabled(true);
+		}
 	}
 	
 	private class ViewAnimationAction extends AbstractAction {
@@ -119,10 +154,11 @@ public class ViewController extends Controller {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
-			frmMain.setTabIndex(2);
+			frmMain.setTabIndex(3);
 			setEnabled(false);
 			viewEditorAction.setEnabled(true);
 			viewSymbolTableAction.setEnabled(true);
+			viewDerivationAction.setEnabled(true);
 		}
 		
 	}

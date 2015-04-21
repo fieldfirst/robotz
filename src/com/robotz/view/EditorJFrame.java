@@ -48,6 +48,7 @@ public class EditorJFrame extends JFrame {
 	private JMenu mnuView;
 	private JMenuItem mnuEditor;
 	private JMenuItem mnuSymbolTable;
+	private JMenuItem mnuDerivation;
 	private JMenuItem mnuAnimation;
 	private JMenuItem mnuError;
 	private JMenuItem mnuConfig;
@@ -73,6 +74,7 @@ public class EditorJFrame extends JFrame {
 	private JTabbedPane mainTabPane;
 	
 	private SymbolTableModel symbolTableModel;
+	private DerivationTableModel derivationTableModel;
 	private AnimationPanel animationPanel;
 
 	public EditorJFrame(){
@@ -101,17 +103,30 @@ public class EditorJFrame extends JFrame {
 		initToolbar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
+		JPanel derivationPanel = new JPanel(new BorderLayout());
 		JPanel symbolTablePanel = new JPanel(new BorderLayout());
 		animationPanel = new AnimationPanel();
 		editorPanel.add(initEditorPanel(), BorderLayout.CENTER);
 		symbolTablePanel.add(initSymbolTablePanel(), BorderLayout.CENTER);
+		derivationPanel.add(initDerivationPanel(), BorderLayout.CENTER);
 		mainTabPane.addTab("Editor", editorPanel);
 		mainTabPane.addTab("Symbol Table", symbolTablePanel);
+		mainTabPane.addTab("Derivation", derivationPanel);
 		mainTabPane.addTab("Animation", animationPanel);
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
 		mainPanel.setBackground(Color.WHITE);
 		add(mainPanel);
+	}
+	
+	private JScrollPane initDerivationPanel() {
+		derivationTableModel = new DerivationTableModel();
+		JTable derivationTable = new JTable(derivationTableModel);
+		derivationTable.setFillsViewportHeight(true);
+		FlatCellRenderer fcr = new FlatCellRenderer();
+		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(0), fcr);
+		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(1), fcr);
+		return new JScrollPane(derivationTable);
 	}
 	
 	private JScrollPane initSymbolTablePanel() {
@@ -193,11 +208,13 @@ public class EditorJFrame extends JFrame {
 		mnuView.setMnemonic(KeyEvent.VK_V);
 		mnuEditor = new JMenuItem();
 		mnuSymbolTable = new JMenuItem();
+		mnuDerivation = new JMenuItem();
 		mnuAnimation = new JMenuItem();
 		mnuError = new JMenuItem();
 		mnuConfig = new JMenuItem();
 		mnuView.add(mnuEditor);
 		mnuView.add(mnuSymbolTable);
+		mnuView.add(mnuDerivation);
 		mnuView.add(mnuAnimation);
 		mnuView.add(new JSeparator());
 		mnuView.add(mnuError);
@@ -256,6 +273,10 @@ public class EditorJFrame extends JFrame {
 
 	public void setMnuSymbolTableAction(Action action) {
 		mnuSymbolTable.setAction(action);
+	}
+	
+	public void setMnuDerivationAction(Action action) {
+		mnuDerivation.setAction(action);
 	}
 
 	public void setMnuAnimationAction(Action action) {
@@ -408,6 +429,14 @@ public class EditorJFrame extends JFrame {
 	
 	public void setEditorTitle(String fileName) {
 		setTitle("Robotz - " + fileName);
+	}
+	
+	public void addDerivationItem(String step, String derivation) {
+		derivationTableModel.addItem(step, derivation);
+	}
+	
+	public void clearDerivationItem() {
+		derivationTableModel.clearTable();
 	}
 
 }

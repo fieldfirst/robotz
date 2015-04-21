@@ -25,11 +25,7 @@ public abstract class FlatDialog extends JDialog{
 			foregroundColor = Color.WHITE;
 			setBackground(bgColor);
 			initComponent();
-			initAction();
 		}
 		
-		protected abstract void initComponent();
-		
-		protected abstract void initAction();
-		
+		protected abstract void initComponent();		
 }

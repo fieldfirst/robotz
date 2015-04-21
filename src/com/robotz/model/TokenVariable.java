@@ -5,6 +5,7 @@ public class TokenVariable implements Token {
 	private int intValue;		// in this case integer value return null
 	private String charValue;
 	private String type;
+	private int lineNumber;
 	
 	/***
 	 * Constructor of TokenVariable
@@ -17,9 +18,10 @@ public class TokenVariable implements Token {
 	 * 
 	 */
 	
-	public TokenVariable(String type, String charValue) {
+	public TokenVariable(String type, String charValue, int lineNumber) {
 		this.type = type;
 		this.charValue = charValue;
+		this.lineNumber = lineNumber;
 	}
 	
 	@Override
@@ -35,6 +37,11 @@ public class TokenVariable implements Token {
 	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public int getLineNumber() {
+		return lineNumber;
 	}
 
 }
