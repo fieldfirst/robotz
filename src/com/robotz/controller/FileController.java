@@ -20,42 +20,61 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.robotz.model.SyntaxHighlighter;
+
 public class FileController extends Controller {
-	
+
 	private FileOpenAction fileOpenAction;
 	private FileNewAction fileNewAction;
 	private FileSaveAction fileSaveAction;
 	private FileSaveAsAction fileSaveAsAction;
 	private FileExitAction fileExitAction;
-	
+
 	private String fileName = "";
-	
+
+	private SyntaxHighlighter syntaxHighlighter;
+
 	protected void initAction() {
 		fileOpenAction = new FileOpenAction();
 		fileNewAction = new FileNewAction();
 		fileSaveAction = new FileSaveAction();
 		fileSaveAsAction = new FileSaveAsAction();
 		fileExitAction = new FileExitAction();
-		
+
 		frmMain.setTextPaneDocumentListener(new DocumentListener(){
 
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
+
+				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
+					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
+					syntaxHighlighter.execute();
+				}
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
+
+				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
+					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
+					syntaxHighlighter.execute();
+				}			
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
+
+				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
+					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
+					syntaxHighlighter.execute();
+				}
 			}
-			
+
 		});
-		
+
 		frmMain.addWindowListener(new WindowAdapter(){
 
 			@Override
@@ -65,11 +84,11 @@ public class FileController extends Controller {
 				else
 				{
 					int n = JOptionPane.showConfirmDialog(
-						    frmMain,
-						    "This file was edited ?\nDo you want to discard it ?",
-						    "Discard Confirmation",
-						    JOptionPane.YES_NO_OPTION,
-						    JOptionPane.WARNING_MESSAGE);
+							frmMain,
+							"This file was edited ?\nDo you want to discard it ?",
+							"Discard Confirmation",
+							JOptionPane.YES_NO_OPTION,
+							JOptionPane.WARNING_MESSAGE);
 					if (n == JOptionPane.YES_OPTION) {
 						System.exit(0);
 					}
@@ -90,11 +109,11 @@ public class FileController extends Controller {
 					}
 				}
 			}
-			
+
 		});
-		
+
 	}
-	
+
 	protected void assignMenuAction() {
 		frmMain.setMnuOpenAction(fileOpenAction);
 		frmMain.setMnuNewAction(fileNewAction);
@@ -102,13 +121,13 @@ public class FileController extends Controller {
 		frmMain.setMnuSaveAsAction(fileSaveAsAction);
 		frmMain.setMnuExitAction(fileExitAction);
 	}
-	
+
 	protected void assignToolBarAction() {
 		frmMain.setToolBarNewAction(fileNewAction);
 		frmMain.setToolBarOpenAction(fileOpenAction);
 		frmMain.setToolBarSaveAction(fileSaveAction);
 	}
-	
+
 	private void saveFile(File file) {
 		BufferedWriter fileWriter;
 		try
@@ -120,10 +139,10 @@ public class FileController extends Controller {
 		}
 		catch (IOException e)
 		{
-				
+
 		}
 	}
-	
+
 	private boolean saveAs() {
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Save as");
@@ -143,11 +162,11 @@ public class FileController extends Controller {
 			else
 			{
 				int n = JOptionPane.showConfirmDialog(
-					    frmMain,
-					    "This file was already existed ?\nDo you want to replace it ?",
-					    "Overwrite Confirmation",
-					    JOptionPane.YES_NO_OPTION,
-					    JOptionPane.WARNING_MESSAGE);
+						frmMain,
+						"This file was already existed ?\nDo you want to replace it ?",
+						"Overwrite Confirmation",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (n == JOptionPane.YES_OPTION) {
 					saveFile(file);
 					fileSaveAction.setEnabled(false);
@@ -163,18 +182,23 @@ public class FileController extends Controller {
 		}
 		return true;
 	}
-	
+
 	private void preparation() {
 		frmMain.setTabIndex(0);
 		errorDialog.clearError();
 		errorDialog.appendError("There is no error :)");
 		frmMain.clearTokenizedItem();
+		
+		if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
+			syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
+			syntaxHighlighter.execute();
+		}
 	}
-	
+
 	private class FileNewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
-		
+
 		private FileNewAction(){
 			super("New", new ImageIcon(frmMain.getClass().getResource("resources/new.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
@@ -184,17 +208,17 @@ public class FileController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 			boolean isSaveSuccessful = true;
-			
+
 			if (fileSaveAction.isEnabled())
 			{
 				int n = JOptionPane.showConfirmDialog(
-					    frmMain,
-					    "This file was edited ?\nDo you want to discard it ?",
-					    "Discard Confirmation",
-					    JOptionPane.YES_NO_OPTION,
-					    JOptionPane.WARNING_MESSAGE);
+						frmMain,
+						"This file was edited ?\nDo you want to discard it ?",
+						"Discard Confirmation",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (n == JOptionPane.NO_OPTION) {
 					File file = new File(fileName);
 					if (!file.exists())
@@ -207,7 +231,7 @@ public class FileController extends Controller {
 					}
 				}
 			}
-			
+
 			if (isSaveSuccessful) {
 				frmMain.setTextPaneText("begin i j\n\nhalt");
 				frmMain.setEditorTitle("New file");
@@ -216,13 +240,13 @@ public class FileController extends Controller {
 				preparation();
 			}
 		}
-		
+
 	}
-	
+
 	private class FileOpenAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
-		
+
 		private FileOpenAction(){
 			super("Open", new ImageIcon(frmMain.getClass().getResource("resources/open.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
@@ -232,17 +256,17 @@ public class FileController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 			boolean isSaveSuccessful = true;
-			
+
 			if (fileSaveAction.isEnabled())
 			{
 				int n = JOptionPane.showConfirmDialog(
-					    frmMain,
-					    "This file was edited ?\nDo you want to discard it ?",
-					    "Discard Confirmation",
-					    JOptionPane.YES_NO_OPTION,
-					    JOptionPane.WARNING_MESSAGE);
+						frmMain,
+						"This file was edited ?\nDo you want to discard it ?",
+						"Discard Confirmation",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (n == JOptionPane.NO_OPTION) {
 					File file = new File(fileName);
 					if (!file.exists())
@@ -282,18 +306,18 @@ public class FileController extends Controller {
 					}
 					catch (IOException e)
 					{
-					
+
 					}
 				}
 			}
 		}
-		
+
 	}
-	
+
 	private class FileSaveAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
-		
+
 		private FileSaveAction(){
 			super("Save", new ImageIcon(frmMain.getClass().getResource("resources/save.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
@@ -315,13 +339,13 @@ public class FileController extends Controller {
 				fileSaveAction.setEnabled(false);
 			}
 		}
-		
+
 	}
-	
+
 	private class FileSaveAsAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
-		
+
 		private FileSaveAsAction(){
 			super("Save As", new ImageIcon(frmMain.getClass().getResource("resources/save.png")));
 			putValue(SHORT_DESCRIPTION, "Save a new file");
@@ -332,13 +356,13 @@ public class FileController extends Controller {
 		public void actionPerformed(ActionEvent arg0) {
 			saveAs();
 		}
-		
+
 	}
-	
+
 	private class FileExitAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
-		
+
 		private FileExitAction(){
 			super("Exit", new ImageIcon(frmMain.getClass().getResource("resources/exit.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
@@ -353,11 +377,11 @@ public class FileController extends Controller {
 			else
 			{
 				int n = JOptionPane.showConfirmDialog(
-					    frmMain,
-					    "This file was edited ?\nDo you want to discard it ?",
-					    "Discard Confirmation",
-					    JOptionPane.YES_NO_OPTION,
-					    JOptionPane.WARNING_MESSAGE);
+						frmMain,
+						"This file was edited ?\nDo you want to discard it ?",
+						"Discard Confirmation",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 				if (n == JOptionPane.YES_OPTION) {
 					System.exit(0);
 				}
@@ -378,7 +402,7 @@ public class FileController extends Controller {
 				}
 			}
 		}
-		
+
 	}
 
 }

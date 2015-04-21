@@ -38,6 +38,7 @@ public class Controller {
 		new ViewController();
 		new HelpController();
 		new AddController();
+		new EditController();
 	}
 	
 	protected void assignMenuAction() {

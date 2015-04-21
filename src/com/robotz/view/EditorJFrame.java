@@ -23,11 +23,14 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 import Main.RobotMain;
+
+import com.robotz.model.SyntaxHighlighter;
 
 public class EditorJFrame extends JFrame {
 
@@ -40,6 +43,13 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuSaveAs;
 	private JMenuItem mnuExit;
 	
+	private JMenu mnuEdit;
+	private JMenuItem mnuUndo;
+	private JMenuItem mnuRedo;
+	private JMenuItem mnuCut;
+	private JMenuItem mnuCopy;
+	private JMenuItem mnuPaste;
+
 	private JMenu mnuCommand;
 	private JMenuItem mnuTokenize;
 	private JMenuItem mnuCompile;
@@ -89,6 +99,8 @@ public class EditorJFrame extends JFrame {
 		setMinimumSize(new Dimension(800, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
+		
+		new SyntaxHighlighter(textPane).execute();
 	}
 	
 	private void osSpecific() {
@@ -162,6 +174,7 @@ public class EditorJFrame extends JFrame {
 	private void initMenu() {
 		mainMenu = new JMenuBar();
 		initFileMenu();
+		initEditMenu();
 		initCommandMenu();
 		initViewMenu();
 		initHelpMenu();
@@ -170,6 +183,7 @@ public class EditorJFrame extends JFrame {
 	
 	private void addToMenuBar() {
 		mainMenu.add(mnuFile);
+		mainMenu.add(mnuEdit);
 		mainMenu.add(mnuCommand);
 		mainMenu.add(mnuView);
 		mainMenu.add(mnuHelp);
@@ -190,6 +204,22 @@ public class EditorJFrame extends JFrame {
 		mnuFile.add(mnuSaveAs);
 		mnuFile.add(new JSeparator());
 		mnuFile.add(mnuExit);
+	}
+	
+	private void initEditMenu() {
+		mnuEdit = new JMenu("Edit");
+		mnuEdit.setMnemonic(KeyEvent.VK_E);
+		mnuUndo = new JMenuItem();
+		mnuRedo = new JMenuItem();
+		mnuCut = new JMenuItem();
+		mnuCopy = new JMenuItem();
+		mnuPaste = new JMenuItem();
+		mnuEdit.add(mnuUndo);
+		mnuEdit.add(mnuRedo);
+		mnuEdit.add(new JSeparator());
+		mnuEdit.add(mnuCut);
+		mnuEdit.add(mnuCopy);
+		mnuEdit.add(mnuPaste);
 	}
 	
 	private void initCommandMenu() {
@@ -253,6 +283,26 @@ public class EditorJFrame extends JFrame {
 
 	public void setMnuExitAction(Action action) {
 		mnuExit.setAction(action);
+	}
+	
+	public void setMnuUndoAction(Action action) {
+		mnuUndo.setAction(action);
+	}
+	
+	public void setMnuRedoAction(Action action) {
+		mnuRedo.setAction(action);
+	}
+	
+	public void setMnuCutAction(Action action) {
+		mnuCut.setAction(action);
+	}
+	
+	public void setMnuCopyAction(Action action) {
+		mnuCopy.setAction(action);
+	}
+	
+	public void setMnuPasteAction(Action action) {
+		mnuPaste.setAction(action);
 	}
 
 	public void setMnuTokenizeAction(Action action) {
@@ -437,6 +487,26 @@ public class EditorJFrame extends JFrame {
 	
 	public void clearDerivationItem() {
 		derivationTableModel.clearTable();
+	}
+	
+	public void textPanePaste() {
+		textPane.paste();
+	}
+	
+	public void textPaneCut() {
+		textPane.cut();
+	}
+	
+	public void textPaneCopy() {
+		textPane.copy();
+	}
+	
+	public void setTextPaneCaretListener(CaretListener listener) {
+		textPane.addCaretListener(listener);
+	}
+	
+	public JTextPane getJTextPane() {
+		return textPane;
 	}
 
 }

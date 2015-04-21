@@ -2,7 +2,6 @@ package com.robotz.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -168,7 +167,7 @@ public class CommandController extends Controller {
 
 		private CommandExecuteAction(){
 			super("Execute", new ImageIcon(frmMain.getClass().getResource("resources/execute.png")));
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl shift X"));
 			putValue(SHORT_DESCRIPTION, "Execute the command(s)");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 		}
