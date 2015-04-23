@@ -151,6 +151,7 @@ public class CommandController extends Controller {
 					errorDialog.setVisible(true);
 					errorDialog.setLocationRelativeTo(frmMain);
 					hasError = true;
+					System.out.println(parser.getLastError());
 				}
 				
 				// Switch to the Derivation tab

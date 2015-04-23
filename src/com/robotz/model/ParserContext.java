@@ -16,51 +16,51 @@ public class ParserContext {
 
 	// All states and its own actions and goto values for each state
 	private HashMap<String, ParserState> states = new HashMap<String, ParserState>();
-	
+
 	// current goto value
 	private HashMap<String, String> gotoTable = new HashMap<String, String>();
-	
+
 	// Tokens are stored here
 	private Queue<Token> tokens;
-	
+
 	// Parse stack
 	private Stack<ParserStackItem> parseStack = new Stack<ParserStackItem>();
-	
+
 	// All grammars
 	private HashMap<Integer, GrammarRule> grammars = new HashMap<Integer, GrammarRule>();
-	
+
 	// Last result
 	private ArrayList<String> result;
-	
+
 	// Last error
 	private String lastError;
-	
+
 	// Operation constant
 	private final String SHIFT = "s";
 	private final String REDUCE = "r";
 	private final String ACCEPT = "acc";
-	
+
 	public ParserContext(InputStream parseTableData) {
-				
+
 		initStates(parseTableData);
 		initGrammars();
-		
+
 		// Prepare a stack for parsing [terminal symbol = null, state is 0]
 		parseStack.push(new ParserStackItem(null, "0"));
 	}
 
 	private void initStates(InputStream parseTableData) {
-		
+
 		try {
-			
+
 			ArrayList<String> terminatingSymbols = new ArrayList<String>();
 
 			BufferedReader fileReader = new BufferedReader(new InputStreamReader(parseTableData));
-			
+
 			final String SEPARATOR = "&";
 			final String EMPTY = "";
 			final int NUMBER_OF_STATE = 40;
-			
+
 			/*
 			 * Get the first line [terminating symbols] for the Action table
 			 * started from index 1 - in order to avoid "" at index 0
@@ -70,7 +70,7 @@ public class ParserContext {
 			for (int i=1; i<line.length; i++) {
 				terminatingSymbols.add(line[i]);
 			}
-			
+
 			/*
 			 * Read then create an instance for each state for the Action table [41 states, from 0 to 40]
 			 * 
@@ -102,12 +102,12 @@ public class ParserContext {
 					else {
 						counter++;
 					}
-				states.put(stateName, ps);
+					states.put(stateName, ps);
 				}
 			}
-			
+
 			ArrayList<String> nonTerminatingSymbols = new ArrayList<String>();
-			
+
 			/*
 			 * Get the non-terminating symbols for the Goto table
 			 * started from index 1 - in order to avoid "" at index 0
@@ -116,7 +116,7 @@ public class ParserContext {
 			for (int i=1; i<line.length; i++) {
 				nonTerminatingSymbols.add(line[i]);
 			}
-			
+
 			// Read then assign the goto value for non-terminating symbols in each state [if it has]
 			counter = 0;
 			for (int i=0; i<=NUMBER_OF_STATE; i++) {
@@ -138,9 +138,9 @@ public class ParserContext {
 					}
 				}
 			}
-			
+
 			fileReader.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// e.printStackTrace();
 
@@ -148,10 +148,10 @@ public class ParserContext {
 			// e.printStackTrace();
 		}
 	}
-	
+
 	private void initGrammars() {
 		grammars.put(0, new GrammarRule(new String[]{"P"}, "P'"));
-		grammars.put(1, new GrammarRule(new String[]{"b", "i", "i", "L", "t"}, "P"));
+		grammars.put(1, new GrammarRule(new String[]{"b", "i", "i", "L", "h"}, "P"));
 		grammars.put(2, new GrammarRule(new String[]{"S", ";"}, "L"));
 		grammars.put(3, new GrammarRule(new String[]{"L", "S", ";"}, "L"));
 		grammars.put(4, new GrammarRule(new String[]{"r", "v", "T", "T"}, "S"));
@@ -167,69 +167,70 @@ public class ParserContext {
 		grammars.put(14, new GrammarRule(new String[]{"e"}, "D"));
 		grammars.put(15, new GrammarRule(new String[]{"w"}, "D"));
 	}
-	
+
 	public void setTokens(Queue<Token> tokens) {
 		this.tokens = tokens;
-		
+
 		// Add the end-of-file
 		this.tokens.add(new TokenKeyword("$", "$", 0));
 	}
-	
+
 	public boolean parse() {
 		// Store current state
 		ParserState currentState = states.get("0");		// Peek the input, then select the initial state
-		
+
 		while (! tokens.isEmpty()) {
-			
+
 			// Update the goto table
 			if (currentState.hasGotoMap()) {
 				for (String nonTerminalSymbol : currentState.getGotoMap().keySet()) {
 					gotoTable.put(nonTerminalSymbol, currentState.getGotoMap().get(nonTerminalSymbol));
 				}
 			}
-						
-			// Shift operation
-			if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(SHIFT)) {
-				parseStack.push(new ParserStackItem(tokens.peek().getType(), currentState.getActionMap(tokens.poll().getType()).get("number")));
-			}
-			// Reduce operation
-			else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(REDUCE)) {
-				int ruleNumber = Integer.parseInt(currentState.getActionMap(tokens.peek().getType()).get("number"));
-				int numberOfTokens = grammars.get(ruleNumber).getExpressionSize();
-				Stack<String> expression = new Stack<String>();
-				for (int i=0; i<numberOfTokens; i++) {
-					expression.push(parseStack.pop().getSymbol());
+			if (currentState.getActionMap(tokens.peek().getType()) != null) {
+				// Shift operation
+				if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(SHIFT)) {
+					parseStack.push(new ParserStackItem(tokens.peek().getType(), currentState.getActionMap(tokens.poll().getType()).get("number")));
 				}
-				if (grammars.get(ruleNumber).evaluate(expression)) {
-					parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol())));
+				// Reduce operation
+				else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(REDUCE)) {
+					int ruleNumber = Integer.parseInt(currentState.getActionMap(tokens.peek().getType()).get("number"));
+					int numberOfTokens = grammars.get(ruleNumber).getExpressionSize();
+					Stack<String> expression = new Stack<String>();
+					for (int i=0; i<numberOfTokens; i++) {
+						expression.push(parseStack.pop().getSymbol());
+					}
+					if (grammars.get(ruleNumber).evaluate(expression)) {
+						parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol())));
+					}
+					else {
+						this.lastError = "Can't reduce : " + tokens.peek().getLineNumber() + " type : " + tokens.poll().getType() + " currentState :  " + currentState.getStateName();
+						break;
+					}
 				}
-				else {
-					this.lastError = "";
-					break;
+				// Accept state
+				else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(ACCEPT)) {
+					return true;
 				}
-			}
-			// Accept state
-			else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(ACCEPT)) {
-				return true;
 			}
 			else {
 				// if getActionMap method of the current state return null, spawn an error [No symbol map found]
-				this.lastError = "";
+				this.lastError = "terminal symbol won't match on line : " + tokens.peek().getLineNumber() + " type : " + tokens.poll().getType() + " currentState :  " + currentState.getStateName();
 				break;
 			}
-			
+
 			// Set a new current state
 			currentState = states.get(parseStack.peek().getStateNumber());
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	public ArrayList<String> getResult() {
 		return this.result;
 	}
-	
+
 	public String getLastError() {
 		return this.lastError;
 	}

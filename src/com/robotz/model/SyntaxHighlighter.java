@@ -22,10 +22,10 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 	public SyntaxHighlighter(JTextPane textPane) {
 		this.textPane = textPane;
 		style = StyleContext.getDefaultStyleContext();
-		textStyleKeyword = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, Color.BLUE);
-		textStyleVariable = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, Color.GRAY);
-		textStyleInteger = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, Color.ORANGE);
-		textStyleComment = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, Color.GREEN);
+		textStyleKeyword = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(162, 107, 147));
+		textStyleVariable = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(27, 165, 220));
+		textStyleInteger = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(23, 161, 85));
+		textStyleComment = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(251, 176, 134));
 
 	}
 	

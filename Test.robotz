@@ -1,3 +1,5 @@
+*- program 1 -*
+
 begin 30 40
 
 obstacle 20 30 ;

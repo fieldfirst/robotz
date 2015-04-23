@@ -33,6 +33,8 @@ public class FileController extends Controller {
 	private String fileName = "";
 
 	private SyntaxHighlighter syntaxHighlighter;
+	
+	private boolean needToUpdateSaveButton = false;
 
 	protected void initAction() {
 		fileOpenAction = new FileOpenAction();
@@ -46,31 +48,19 @@ public class FileController extends Controller {
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
-
-				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
-					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
-					syntaxHighlighter.execute();
-				}
+				syntaxHighlighting();
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
-
-				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
-					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
-					syntaxHighlighter.execute();
-				}			
+				syntaxHighlighting();		
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
 				fileSaveAction.setEnabled(true);
-
-				if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
-					syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
-					syntaxHighlighter.execute();
-				}
+				syntaxHighlighting();
 			}
 
 		});
@@ -188,7 +178,9 @@ public class FileController extends Controller {
 		errorDialog.clearError();
 		errorDialog.appendError("There is no error :)");
 		frmMain.clearTokenizedItem();
-		
+	}
+
+	private void syntaxHighlighting() {
 		if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
 			syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
 			syntaxHighlighter.execute();

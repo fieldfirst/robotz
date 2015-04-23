@@ -8,7 +8,7 @@ public class DerivationTableModel extends AbstractTableModel {
 	
 	private static final long serialVersionUID = 256148375662108254L;
 	private ArrayList<Object[]> data = new ArrayList<Object[]>();
-	private String[] columnNames = {"Step", "Derivation"};
+	private String[] columnNames = {"Production", "Derivation"};
 	
 	public void addItem(String step, String derivation) {
 		data.add(new Object[]{step, derivation});
