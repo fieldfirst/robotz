@@ -50,7 +50,10 @@ public class EditController extends Controller {
 	}
 	
 	protected void assignToolBarAction() {
-		
+		frmMain.setToolBarUndo(editUndoAction);
+		frmMain.setToolBarRedo(editRedoAction);
+		frmMain.setToolBarCopy(editCopyAction);
+		frmMain.setToolBarPaste(editPasteAction);
 	}
 	
 	private class EditUndoAction extends AbstractAction {

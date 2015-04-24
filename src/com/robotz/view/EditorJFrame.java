@@ -70,8 +70,10 @@ public class EditorJFrame extends JFrame {
 	
 	private JToolBar mainToolBar;
 	private Insets toolBarButtonInsets;
-	private JButton toolBarRobot;
-	private JButton toolBarObstacle;
+	private JButton toolBarUndo;
+	private JButton toolBarRedo;
+	private JButton toolBarCopy;
+	private JButton toolBarPaste;
 	private JButton toolBarError;
 	private JButton toolBarOpen;
 	private JButton toolBarNew;
@@ -79,6 +81,15 @@ public class EditorJFrame extends JFrame {
 	private JButton toolBarTokenize;
 	private JButton toolBarCompile;
 	private JButton toolBarExecute;
+	
+	private JToolBar addToolBar;
+	private Insets addToolBarButtonInsets;
+	private JButton toolBarRobot;
+	private JButton toolBarObstacle;
+	private JButton toolBarAdd;
+	private JButton toolBarMove;
+	private JButton toolBarVariable;
+	private JButton toolBarDo;
 	
 	private JTextPane textPane;
 	private JTabbedPane mainTabPane;
@@ -94,9 +105,9 @@ public class EditorJFrame extends JFrame {
 		initComponent();
 		setJMenuBar(mainMenu);
 		setBackground(Color.WHITE);
-		setSize(800, 600);
-		setPreferredSize(new Dimension(800, 600));
-		setMinimumSize(new Dimension(800, 600));
+		setSize(900, 600);
+		setPreferredSize(new Dimension(900, 600));
+		setMinimumSize(new Dimension(900, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		
@@ -104,15 +115,20 @@ public class EditorJFrame extends JFrame {
 	}
 	
 	private void osSpecific() {
-		if (RobotMain.getOSName().contains("win"))
+		if (RobotMain.getOSName().contains("win")) {
 			toolBarButtonInsets = new Insets(8, 18, 8, 18);
-		else if (RobotMain.getOSName().contains("mac"))
+			addToolBarButtonInsets = new Insets(0, 0, 0, 0);
+		}
+		else if (RobotMain.getOSName().contains("mac")) {
 			toolBarButtonInsets = new Insets(6, 0, 0, 0);
+			addToolBarButtonInsets = new Insets(0, 0, 0, 0);
+		}
 	}
 	
 	private void initComponent() {
 		initMenu();
 		initToolbar();
+		initAddToolBar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
 		JPanel derivationPanel = new JPanel(new BorderLayout());
@@ -126,6 +142,7 @@ public class EditorJFrame extends JFrame {
 		mainTabPane.addTab("Derivation", derivationPanel);
 		mainTabPane.addTab("Animation", animationPanel);
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
+		mainPanel.add(addToolBar, BorderLayout.EAST);
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
 		mainPanel.setBackground(Color.WHITE);
 		add(mainPanel);
@@ -264,6 +281,57 @@ public class EditorJFrame extends JFrame {
 		mnuHelp.add(mnuAbout);
 	}
 
+	private void initToolbar() {
+		mainToolBar = new JToolBar();
+		mainToolBar.setBackground(Color.WHITE);
+		mainToolBar.setFloatable(false);
+		mainToolBar.setOrientation(JToolBar.HORIZONTAL);
+		toolBarUndo = createToolBarButton("Undo", getClass().getResource("resources/undo.png"));
+		toolBarRedo = createToolBarButton("Redo", getClass().getResource("resources/redo.png"));
+		toolBarCopy = createToolBarButton("Copy", getClass().getResource("resources/copy.png"));
+		toolBarPaste = createToolBarButton("Paste", getClass().getResource("resources/paste.png"));
+		toolBarError = createToolBarButton("Error", getClass().getResource("resources/error_toolbar.png"));
+		mainToolBar.add(new JToolBar.Separator());
+		toolBarNew = createToolBarButton("New", getClass().getResource("resources/new.png"));
+		toolBarOpen = createToolBarButton("Open", getClass().getResource("resources/open.png"));
+		toolBarSave = createToolBarButton("Save", getClass().getResource("resources/save.png"));
+		mainToolBar.add(new JToolBar.Separator());
+		toolBarTokenize = createToolBarButton("Tokenize", getClass().getResource("resources/tokenize.png"));
+		toolBarCompile = createToolBarButton("Compile", getClass().getResource("resources/compile.png"));
+		toolBarExecute = createToolBarButton("Execute", getClass().getResource("resources/execute.png"));
+	}
+
+	private JButton createToolBarButton(String title, URL iconPath) {
+		JButton t = new JButton(title, new ImageIcon(iconPath));
+		t.setUI(new FlatToolBarButtonUI());
+		t.setVerticalTextPosition(SwingConstants.BOTTOM);
+		t.setHorizontalTextPosition(SwingConstants.CENTER);
+		t.setMargin(toolBarButtonInsets);
+		t.setBackground(Color.WHITE);
+		mainToolBar.add(t);
+		return t;
+	}
+	
+	private void initAddToolBar() {
+		addToolBar = new JToolBar(null, JToolBar.VERTICAL);
+		addToolBar.setBackground(Color.WHITE);
+		addToolBar.setFloatable(false);
+		toolBarRobot = createAddToolBarButton("Robot", getClass().getResource("resources/robot.png"));
+		toolBarObstacle = createAddToolBarButton("Obstacle", getClass().getResource("resources/obstacle.png"));
+		toolBarAdd = createAddToolBarButton("Add", getClass().getResource("resources/add.png"));
+		toolBarMove = createAddToolBarButton("Move", getClass().getResource("resources/move.png"));
+		toolBarVariable = createAddToolBarButton("Variable", getClass().getResource("resources/variable.png"));
+		toolBarDo = createAddToolBarButton("Loop", getClass().getResource("resources/do.png"));
+	}
+	
+	private JButton createAddToolBarButton(String title, URL iconPath) {
+		JButton t = new JButton(title, new ImageIcon(iconPath));
+		t.setUI(new FlatToolBarButtonUI());
+		t.setMargin(addToolBarButtonInsets);
+		t.setBackground(Color.WHITE);
+		addToolBar.add(t);
+		return t;
+	}
 	
 	public void setMnuOpenAction(Action action) {
 		mnuOpen.setAction(action);
@@ -365,35 +433,6 @@ public class EditorJFrame extends JFrame {
 		mainTabPane.addChangeListener(listener);
 	}
 	
-	private void initToolbar() {
-		mainToolBar = new JToolBar();
-		mainToolBar.setBackground(Color.WHITE);
-		mainToolBar.setFloatable(false);
-		mainToolBar.setOrientation(JToolBar.HORIZONTAL);
-		toolBarRobot = createToolBarButton("Robot", getClass().getResource("resources/robot.png"));
-		toolBarObstacle = createToolBarButton("Obstacle", getClass().getResource("resources/obstacle.png"));
-		toolBarError = createToolBarButton("Error", getClass().getResource("resources/error_toolbar.png"));
-		mainToolBar.add(new JToolBar.Separator());
-		toolBarNew = createToolBarButton("New", getClass().getResource("resources/new.png"));
-		toolBarOpen = createToolBarButton("Open", getClass().getResource("resources/open.png"));
-		toolBarSave = createToolBarButton("Save", getClass().getResource("resources/save.png"));
-		mainToolBar.add(new JToolBar.Separator());
-		toolBarTokenize = createToolBarButton("Tokenize", getClass().getResource("resources/tokenize.png"));
-		toolBarCompile = createToolBarButton("Compile", getClass().getResource("resources/compile.png"));
-		toolBarExecute = createToolBarButton("Execute", getClass().getResource("resources/execute.png"));
-	}
-
-	private JButton createToolBarButton(String title, URL iconPath) {
-		JButton t = new JButton(title, new ImageIcon(iconPath));
-		t.setUI(new FlatToolBarButtonUI());
-		t.setVerticalTextPosition(SwingConstants.BOTTOM);
-		t.setHorizontalTextPosition(SwingConstants.CENTER);
-		t.setMargin(toolBarButtonInsets);
-		t.setBackground(Color.WHITE);
-		mainToolBar.add(t);
-		return t;
-	}
-	
 	public void setToolBarNewAction(Action action) {
 		toolBarNew.setAction(action);
 	}
@@ -426,8 +465,40 @@ public class EditorJFrame extends JFrame {
 		toolBarObstacle.setAction(action);
 	}
 	
+	public void setToolBarAdd(Action action) {
+		toolBarAdd.setAction(action);
+	}
+	
+	public void setToolBarMove(Action action) {
+		toolBarMove.setAction(action);
+	}
+	
+	public void setToolBarVariable(Action action) {
+		toolBarVariable.setAction(action);
+	}
+	
+	public void setToolBarDo(Action action) {
+		toolBarDo.setAction(action);
+	}
+	
 	public void setToolBarError(Action action) {
 		toolBarError.setAction(action);
+	}
+	
+	public void setToolBarUndo(Action action) {
+		toolBarUndo.setAction(action);
+	}
+	
+	public void setToolBarRedo(Action action) {
+		toolBarRedo.setAction(action);
+	}
+	
+	public void setToolBarCopy(Action action) {
+		toolBarCopy.setAction(action);
+	}
+	
+	public void setToolBarPaste(Action action) {
+		toolBarPaste.setAction(action);
 	}
 	
 	public String getTextPaneText() {

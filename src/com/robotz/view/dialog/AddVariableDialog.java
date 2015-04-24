@@ -7,17 +7,26 @@ import javax.swing.JPanel;
 
 import com.robotz.view.EditorJFrame;
 
-public class AddObstacleDialog extends AddDialog {
+public class AddVariableDialog extends AddDialog {
+	
+	private static final long serialVersionUID = 1L;
 
-	public AddObstacleDialog(EditorJFrame frmMain) {
+	public AddVariableDialog(EditorJFrame frmMain) {
 		super(frmMain);
 	}
 
-	private static final long serialVersionUID = 1L;
-	
+	@Override
+	protected void checkInput() {
+		if (! xPositionTextField.getText().trim().equals("") && ! yPositionTextField.getText().trim().equals("")) {
+			acceptButton.setEnabled(true);
+		}
+		else
+			acceptButton.setEnabled(false);
+	}
+
 	@Override
 	protected void setTitle() {
-		setTitle("Add a new obstacle");
+		setTitle("Add variable command");
 	}
 
 	@Override
@@ -28,7 +37,7 @@ public class AddObstacleDialog extends AddDialog {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 0;
-		mainPanel.add(new JLabel("X position : "), c);
+		mainPanel.add(new JLabel("Variable name : "), c);
 		
 		c.gridx = 1;
 		c.gridy = 0;
@@ -37,7 +46,7 @@ public class AddObstacleDialog extends AddDialog {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 1;
-		mainPanel.add(new JLabel("Y position : "), c);
+		mainPanel.add(new JLabel("Value : "), c);
 		
 		c.gridx = 1;
 		c.gridy = 1;
@@ -50,22 +59,12 @@ public class AddObstacleDialog extends AddDialog {
 		panel.add(acceptButton);
 		panel.add(cancelButton);
 		mainPanel.add(panel, c);
-		
 	}
 
 	@Override
 	public String[] getResult() {
 		return new String[]{xPositionTextField.getText(),
-							yPositionTextField.getText()};
-	}
-
-	@Override
-	protected void checkInput() {
-		if (! xPositionTextField.getText().trim().equals("") && ! yPositionTextField.getText().trim().equals("")) {
-			acceptButton.setEnabled(true);
-		}
-		else
-			acceptButton.setEnabled(false);
+				yPositionTextField.getText()};
 	}
 
 }

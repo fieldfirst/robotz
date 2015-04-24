@@ -5,8 +5,14 @@ import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.robotz.view.EditorJFrame;
+
 public class AddRobotDialog extends AddDialog {
 	
+	public AddRobotDialog(EditorJFrame frmMain) {
+		super(frmMain);
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
