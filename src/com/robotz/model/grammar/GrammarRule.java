@@ -6,10 +6,12 @@ public class GrammarRule {
 
 	private String[] grammarTokens;
 	private String leftSymbol;
+	private String rightSymbol;
 	
 	public GrammarRule(String[] grammarTokens, String leftSymbol) {
 		this.grammarTokens = grammarTokens;
 		this.leftSymbol = leftSymbol;
+		this.rightSymbol = "";
 	}
 
 	public boolean evaluate(Stack<String> expression) {
@@ -38,6 +40,10 @@ public class GrammarRule {
 	
 	public int getExpressionSize() {
 		return grammarTokens.length;
+	}
+	
+	public String getProductionRuleAsString() {		
+		return this.leftSymbol + " ->" + this.rightSymbol;
 	}
 
 }

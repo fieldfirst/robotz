@@ -18,7 +18,7 @@ public class CommandController extends Controller {
 	private CommandTokenizeAction commandTokenizeAction;
 	private CommandCompileAction commandCompileAction;
 	private CommandExecuteAction commandExecuteAction;
-	
+
 	private ErrorDialogCloseButton errorDialogCloseButton;
 
 	// All tokens are stored here
@@ -38,7 +38,7 @@ public class CommandController extends Controller {
 		frmMain.setMnuTokenizeAction(commandTokenizeAction);
 		frmMain.setMnuCompileAction(commandCompileAction);
 		frmMain.setMnuExecuteAction(commandExecuteAction);
-		
+
 		// special assign the action to the Error dialog's close button
 		errorDialog.setbtnCloseAction(errorDialogCloseButton);
 	}
@@ -126,13 +126,13 @@ public class CommandController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 			// Before parsing process, we must scan and tokenize first
 			commandTokenizeAction.actionPerformed(arg0);
 
 			// If the tokenization process was failed, then don't do anything
 			if (! hasError) {
-				
+
 				// Lazy initialization
 				if (parser == null) {
 					parser = new ParserContext(frmMain.getClass().getResourceAsStream("resources/parsedata"));
@@ -145,15 +145,18 @@ public class CommandController extends Controller {
 				 */
 				parser.setTokens(tokens);
 				if (parser.parse()) {
-					System.out.println("ACCEPT");
+					int size = parser.getResultProductionRule().size() - 1;
+					for (int i=size; i>=0; i--) {
+						frmMain.addDerivationItem(parser.getResultProductionRule().get(i).getProductionRuleAsString(), "");
+					}
 				}
 				else {
+					errorDialog.appendError(parser.getLastError());
 					errorDialog.setVisible(true);
 					errorDialog.setLocationRelativeTo(frmMain);
 					hasError = true;
-					System.out.println(parser.getLastError());
 				}
-				
+
 				// Switch to the Derivation tab
 				frmMain.setTabIndex(2);
 			}
@@ -180,9 +183,9 @@ public class CommandController extends Controller {
 		}
 
 	}
-	
+
 	private class ErrorDialogCloseButton extends AbstractAction {
-		
+
 		private static final long serialVersionUID = -957102144625612679L;
 
 		@Override
@@ -190,7 +193,7 @@ public class CommandController extends Controller {
 			errorDialog.setVisible(false);
 			hasError = false;
 		}
-		
+
 	}
 
 }

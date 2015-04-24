@@ -37,7 +37,7 @@ public class AddMoveDialog extends AddDialog {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 0;
-		mainPanel.add(new JLabel("Robot name : "), c);
+		mainPanel.add(new JLabel("Robot's name : "), c);
 		
 		c.gridx = 1;
 		c.gridy = 0;
@@ -48,6 +48,7 @@ public class AddMoveDialog extends AddDialog {
 		c.gridy = 1;
 		mainPanel.add(new JLabel("Direction : "), c);
 		
+		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 1;
 		c.gridy = 1;
 		directionField.addItem(new String("north"));
@@ -59,7 +60,7 @@ public class AddMoveDialog extends AddDialog {
 		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 2;
-		mainPanel.add(new JLabel("Integer : "), c);
+		mainPanel.add(new JLabel("Value : "), c);
 		
 		c.gridx = 1;
 		c.gridy = 2;

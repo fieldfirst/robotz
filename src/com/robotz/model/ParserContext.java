@@ -29,8 +29,8 @@ public class ParserContext {
 	// All grammars
 	private HashMap<Integer, GrammarRule> grammars = new HashMap<Integer, GrammarRule>();
 
-	// Last result
-	private ArrayList<String> result;
+	// Result : production rules
+	private ArrayList<GrammarRule> resultProductionRule = new ArrayList<GrammarRule>();
 
 	// Last error
 	private String lastError;
@@ -39,7 +39,7 @@ public class ParserContext {
 	private final String SHIFT = "s";
 	private final String REDUCE = "r";
 	private final String ACCEPT = "acc";
-
+	
 	public ParserContext(InputStream parseTableData) {
 
 		initStates(parseTableData);
@@ -202,6 +202,7 @@ public class ParserContext {
 					}
 					if (grammars.get(ruleNumber).evaluate(expression)) {
 						parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol())));
+						resultProductionRule.add(grammars.get(ruleNumber));
 					}
 					else {
 						this.lastError = "Can't reduce : " + tokens.peek().getLineNumber() + " type : " + tokens.poll().getType() + " currentState :  " + currentState.getStateName();
@@ -226,12 +227,11 @@ public class ParserContext {
 		return false;
 	}
 
-
-	public ArrayList<String> getResult() {
-		return this.result;
-	}
-
 	public String getLastError() {
 		return this.lastError;
+	}
+	
+	public ArrayList<GrammarRule> getResultProductionRule() {
+		return this.resultProductionRule;
 	}
 }
