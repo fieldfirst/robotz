@@ -34,7 +34,7 @@ public class FileController extends Controller {
 
 	private SyntaxHighlighter syntaxHighlighter;
 	
-	private boolean needToUpdateSaveButton = false;
+	private DocumentListener textPaneListener;
 
 	protected void initAction() {
 		fileOpenAction = new FileOpenAction();
@@ -42,28 +42,28 @@ public class FileController extends Controller {
 		fileSaveAction = new FileSaveAction();
 		fileSaveAsAction = new FileSaveAsAction();
 		fileExitAction = new FileExitAction();
-
-		frmMain.setTextPaneDocumentListener(new DocumentListener(){
-
+		
+		textPaneListener = new DocumentListener(){
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-				fileSaveAction.setEnabled(true);
 				syntaxHighlighting();
+				fileSaveAction.setEnabled(true);
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
+				syntaxHighlighting();	
 				fileSaveAction.setEnabled(true);
-				syntaxHighlighting();		
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				fileSaveAction.setEnabled(true);
 				syntaxHighlighting();
+				fileSaveAction.setEnabled(true);
 			}
+		};
 
-		});
+		frmMain.setTextPaneDocumentListener(textPaneListener);
 
 		frmMain.addWindowListener(new WindowAdapter(){
 
@@ -178,12 +178,14 @@ public class FileController extends Controller {
 		errorDialog.clearError();
 		errorDialog.appendError("There is no error :)");
 		frmMain.clearTokenizedItem();
+		frmMain.clearDerivationItem();
 	}
 
 	private void syntaxHighlighting() {
-		if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {
+		if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {			
 			syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
 			syntaxHighlighter.execute();
+			frmMain.getJTextPane().repaint();
 		}
 	}
 
@@ -199,7 +201,7 @@ public class FileController extends Controller {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent arg0) {			
 
 			boolean isSaveSuccessful = true;
 
@@ -224,12 +226,18 @@ public class FileController extends Controller {
 				}
 			}
 
-			if (isSaveSuccessful) {
+			if (isSaveSuccessful) {				
+				
+				frmMain.resetTextPaneDocumentListener(textPaneListener);
+				
 				frmMain.setTextPaneText("begin i j\n\nhalt");
 				frmMain.setEditorTitle("New file");
-				fileName = "";
 				fileSaveAction.setEnabled(false);
+				fileName = "";
 				preparation();
+				
+				frmMain.setTextPaneDocumentListener(textPaneListener);
+
 			}
 		}
 
@@ -273,6 +281,9 @@ public class FileController extends Controller {
 				}
 			}
 			if (isSaveSuccessful) {
+				
+				frmMain.resetTextPaneDocumentListener(textPaneListener);
+				
 				JFileChooser fc = new JFileChooser();
 				fc.setDialogTitle("Open");
 				fc.setFileFilter(new FileNameExtensionFilter("Robotz", "robotz"));
@@ -288,7 +299,7 @@ public class FileController extends Controller {
 					{
 						fileReader = new BufferedReader(new FileReader(file));
 						String line = null;
-						while ((line = fileReader.readLine()) != null) {
+						while ((line = fileReader.readLine()) != null) {							
 							frmMain.setAppendText(line + "\n");
 						}
 						fileReader.close();
@@ -301,6 +312,9 @@ public class FileController extends Controller {
 
 					}
 				}
+				
+				frmMain.setTextPaneDocumentListener(textPaneListener);
+				
 			}
 		}
 

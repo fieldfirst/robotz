@@ -7,7 +7,7 @@ public class ParserState {
 	private String stateName;
 	private HashMap<String, String[]> actionMap = new HashMap<String, String[]>();
 	private HashMap<String, String> gotoMap = new HashMap<String, String>();
-	
+		
 	public ParserState(String stateName) {
 		this.stateName = stateName;
 	}
@@ -58,6 +58,22 @@ public class ParserState {
 	
 	public HashMap<String, String> getGotoMap() {
 		return gotoMap;
+	}
+	
+	public String getAllPossibleTerminalSymbols() {
+		String result = "";
+		int size = actionMap.size();
+		int i = 1;
+		for (String terminalSymbol : actionMap.keySet()) {
+			if (i < size) {
+				result += "<" + ParserUtility.getTypeToStringMap(terminalSymbol) + "> or ";
+			}
+			else {
+				result += "<" + ParserUtility.getTypeToStringMap(terminalSymbol) + ">";
+			}
+			i++;
+		}
+		return result;
 	}
 	
 }

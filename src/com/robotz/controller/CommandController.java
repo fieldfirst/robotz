@@ -2,8 +2,10 @@ package com.robotz.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -12,6 +14,7 @@ import javax.swing.KeyStroke;
 import com.robotz.model.ParserContext;
 import com.robotz.model.Token;
 import com.robotz.model.Tokenizer;
+import com.robotz.model.grammar.GrammarRule;
 
 public class CommandController extends Controller {
 
@@ -139,18 +142,63 @@ public class CommandController extends Controller {
 				}
 
 				/*
+				 * 	Clear the last parse result
 				 *  Begin parsing
 				 *  
 				 *  if there is an error, the parser will return false
 				 */
+				frmMain.clearDerivationItem();
 				parser.setTokens(tokens);
+				parser.clearLastResult();
+
 				if (parser.parse()) {
-					int size = parser.getResultProductionRule().size() - 1;
+					ArrayList<GrammarRule> resultRule = parser.getResultProductionRule();
+					ArrayList<Stack<Token>> resultDerivation = parser.getResultForDerivation();
+
+					int size = resultRule.size() - 1;
+					String derivationIncremental = "";
+
 					for (int i=size; i>=0; i--) {
-						frmMain.addDerivationItem(parser.getResultProductionRule().get(i).getProductionRuleAsString(), "");
+						String[] splitRule = resultRule.get(i).getProductionRuleAsString().split(" ", 3);
+						String leftSymbol = splitRule[0];
+						String[] rightSymbol = splitRule[2].split(" ");
+						for (int k=0; k<rightSymbol.length; k++) {
+							if (resultDerivation.get(i).peek().getType().equals("i")) {
+								rightSymbol[k] = rightSymbol[k].replace("int", resultDerivation.get(i).pop().getCharValue());
+							}
+							else if (resultDerivation.get(i).peek().getType().equals("v")) {
+								rightSymbol[k] = rightSymbol[k].replace("var", resultDerivation.get(i).pop().getCharValue());
+							}
+							else {
+								resultDerivation.get(i).pop();
+							}
+						}
+						String derivation = "";
+						for (int k=0; k<rightSymbol.length; k++) {
+							derivation += rightSymbol[k].trim() + " ";
+						}
+						if (derivationIncremental.contains(leftSymbol)) {
+							String[] d = derivationIncremental.split(" ");
+							for (int g=d.length-1; g>=0; g--) {
+								if (d[g].equals(leftSymbol)) {
+									d[g] = derivation;
+									break;
+								}
+							}
+							derivationIncremental = "";
+							for (int a=0; a<d.length; a++) {
+								derivationIncremental += d[a] + " "; 
+							}
+						}
+						else {
+							derivationIncremental = derivation; // begin
+						}
+						frmMain.addDerivationItem(resultRule.get(i).getProductionRuleAsString(), derivationIncremental);
 					}
 				}
+
 				else {
+					errorDialog.clearError();
 					errorDialog.appendError(parser.getLastError());
 					errorDialog.setVisible(true);
 					errorDialog.setLocationRelativeTo(frmMain);

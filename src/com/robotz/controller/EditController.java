@@ -69,7 +69,7 @@ public class EditController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+
 		}
 		
 	}

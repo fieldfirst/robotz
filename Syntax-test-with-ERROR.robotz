@@ -1,0 +1,11 @@
+*- program -*
+
+*- Type to enable syntax highlighting, [experimental] -*
+
+begin 100 80
+
+robot 4 3 9 ;
+
+move eddy north 4 ;
+
+halt

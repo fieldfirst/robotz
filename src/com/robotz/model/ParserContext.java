@@ -31,6 +31,9 @@ public class ParserContext {
 
 	// Result : production rules
 	private ArrayList<GrammarRule> resultProductionRule = new ArrayList<GrammarRule>();
+	
+	// Result : for derivation
+	private ArrayList<Stack<Token>> resultForDerivation = new ArrayList<Stack<Token>>();
 
 	// Last error
 	private String lastError;
@@ -46,7 +49,7 @@ public class ParserContext {
 		initGrammars();
 
 		// Prepare a stack for parsing [terminal symbol = null, state is 0]
-		parseStack.push(new ParserStackItem(null, "0"));
+		parseStack.push(new ParserStackItem(null, "0", null));
 	}
 
 	private void initStates(InputStream parseTableData) {
@@ -190,22 +193,26 @@ public class ParserContext {
 			if (currentState.getActionMap(tokens.peek().getType()) != null) {
 				// Shift operation
 				if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(SHIFT)) {
-					parseStack.push(new ParserStackItem(tokens.peek().getType(), currentState.getActionMap(tokens.poll().getType()).get("number")));
+					parseStack.push(new ParserStackItem(tokens.peek().getType(), currentState.getActionMap(tokens.peek().getType()).get("number"), tokens.poll()));
 				}
 				// Reduce operation
 				else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(REDUCE)) {
 					int ruleNumber = Integer.parseInt(currentState.getActionMap(tokens.peek().getType()).get("number"));
 					int numberOfTokens = grammars.get(ruleNumber).getExpressionSize();
 					Stack<String> expression = new Stack<String>();
+					Stack<Token> forDerivationOutput = new Stack<Token>();
 					for (int i=0; i<numberOfTokens; i++) {
+						forDerivationOutput.push(parseStack.peek().getToken());
 						expression.push(parseStack.pop().getSymbol());
 					}
+					resultForDerivation.add(forDerivationOutput);
 					if (grammars.get(ruleNumber).evaluate(expression)) {
-						parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol())));
+						parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol()), tokens.peek()));
 						resultProductionRule.add(grammars.get(ruleNumber));
 					}
 					else {
-						this.lastError = "Can't reduce : " + tokens.peek().getLineNumber() + " type : " + tokens.poll().getType() + " currentState :  " + currentState.getStateName();
+						// Reduce failed
+						this.lastError = "";
 						break;
 					}
 				}
@@ -216,7 +223,7 @@ public class ParserContext {
 			}
 			else {
 				// if getActionMap method of the current state return null, spawn an error [No symbol map found]
-				this.lastError = "terminal symbol won't match on line : " + tokens.peek().getLineNumber() + " type : " + tokens.poll().getType() + " currentState :  " + currentState.getStateName();
+				this.lastError = "Syntax's error in line " + tokens.peek().getLineNumber() + " : " + tokens.peek().getCharValue() + " is <" + ParserUtility.getTypeToStringMap(tokens.peek().getType()) + ">, expected " + currentState.getAllPossibleTerminalSymbols();
 				break;
 			}
 
@@ -233,5 +240,14 @@ public class ParserContext {
 	
 	public ArrayList<GrammarRule> getResultProductionRule() {
 		return this.resultProductionRule;
+	}
+	
+	public ArrayList<Stack<Token>> getResultForDerivation() {
+		return this.resultForDerivation;
+	}
+	
+	public void clearLastResult() {
+		resultProductionRule.clear();
+		resultForDerivation.clear();
 	}
 }

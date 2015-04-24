@@ -9,12 +9,11 @@ robot john 3 4 ;
 
 wall = 15 ;
 
-do
-    obstacle wall a ;
-    add 5 to a ;
-until a > 20 ;
-
 run = 9 ;
+
+do
+    add 4 to run ;
+until run > 3 ;
 
 move john south run ;
 move john west 2 ;

@@ -19,6 +19,7 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 	private AttributeSet textStyleInteger;
 	private AttributeSet textStyleComment;
 	
+	
 	public SyntaxHighlighter(JTextPane textPane) {
 		this.textPane = textPane;
 		style = StyleContext.getDefaultStyleContext();
@@ -26,7 +27,6 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 		textStyleVariable = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(27, 165, 220));
 		textStyleInteger = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(23, 161, 85));
 		textStyleComment = style.addAttribute(style.getEmptySet(), StyleConstants.Foreground, new Color(251, 176, 134));
-
 	}
 	
 	private final Pattern KEYWORD = Pattern.compile("(begin|halt|obstacle|add|to|move|north|south|east|west|robot|do|until|;|<|>|=)");
@@ -56,6 +56,7 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 		while (m.find()) {
 			textPane.getStyledDocument().setCharacterAttributes(m.start(), (m.end() - m.start()), textStyleKeyword, false);
 		}
+		
 		return null;
 	}
 

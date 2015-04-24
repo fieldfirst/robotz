@@ -31,6 +31,11 @@ public class SymbolTableModel extends AbstractTableModel {
 	public Object getValueAt(int row, int col) {
 		return data.get(row)[col];
 	}
+	
+	@Override
+	public void setValueAt(Object value, int row, int col) {
+		data.get(row)[col] = value;
+	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {

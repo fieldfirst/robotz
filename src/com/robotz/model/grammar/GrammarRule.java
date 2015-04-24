@@ -2,12 +2,14 @@ package com.robotz.model.grammar;
 
 import java.util.Stack;
 
+import com.robotz.model.ParserUtility;
+
 public class GrammarRule {
 
 	private String[] grammarTokens;
 	private String leftSymbol;
 	private String rightSymbol;
-	
+		
 	public GrammarRule(String[] grammarTokens, String leftSymbol) {
 		this.grammarTokens = grammarTokens;
 		this.leftSymbol = leftSymbol;
@@ -15,13 +17,21 @@ public class GrammarRule {
 	}
 
 	public boolean evaluate(Stack<String> expression) {
-
+		
+		this.rightSymbol = "";
 		int counter = 0;
 		while (! expression.isEmpty()) {
 			if (grammarTokens[counter].equals(expression.pop())) {
+				if (ParserUtility.getTypeToStringMap(grammarTokens[counter]) != null) {
+					rightSymbol += " " + ParserUtility.getTypeToStringMap(grammarTokens[counter]);
+				}
+				else {
+					rightSymbol += " " + grammarTokens[counter];
+				}
 				counter++;
 			}
 			else {
+				// Error detected, can't reduce
 				return false;
 			}
 		}

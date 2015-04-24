@@ -131,15 +131,11 @@ public class EditorJFrame extends JFrame {
 		initAddToolBar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
-		JPanel derivationPanel = new JPanel(new BorderLayout());
-		JPanel symbolTablePanel = new JPanel(new BorderLayout());
 		animationPanel = new AnimationPanel();
 		editorPanel.add(initEditorPanel(), BorderLayout.CENTER);
-		symbolTablePanel.add(initSymbolTablePanel(), BorderLayout.CENTER);
-		derivationPanel.add(initDerivationPanel(), BorderLayout.CENTER);
 		mainTabPane.addTab("Editor", editorPanel);
-		mainTabPane.addTab("Symbol Table", symbolTablePanel);
-		mainTabPane.addTab("Derivation", derivationPanel);
+		mainTabPane.addTab("Symbol Table", initSymbolTablePanel());
+		mainTabPane.addTab("Derivation", initDerivationPanel());
 		mainTabPane.addTab("Animation", animationPanel);
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
 		mainPanel.add(addToolBar, BorderLayout.EAST);
@@ -155,7 +151,7 @@ public class EditorJFrame extends JFrame {
 		FlatCellRenderer fcr = new FlatCellRenderer();
 		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(0), fcr);
 		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(1), fcr);
-		return new JScrollPane(derivationTable);
+		return new JScrollPane(derivationTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	}
 	
 	private JScrollPane initSymbolTablePanel() {
@@ -578,6 +574,18 @@ public class EditorJFrame extends JFrame {
 	
 	public JTextPane getJTextPane() {
 		return textPane;
+	}
+	
+	public Object getSymbolTableValueAt(int row, int col) {
+		return symbolTableModel.getValueAt(row, col);
+	}
+	
+	public void setSymbolTableValueAt(Object value, int row, int col) {
+		symbolTableModel.setValueAt(value, row, col);
+	}
+	
+	public void resetTextPaneDocumentListener(DocumentListener listener) {
+		textPane.getDocument().removeDocumentListener(listener);
 	}
 
 }

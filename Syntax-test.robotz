@@ -1,0 +1,11 @@
+*- program -*
+
+*- Type to enable syntax hightlighting, [experimental] -*
+
+begin 100 80
+
+robot eddy 3 9 ;
+
+move eddy north 4 ;
+
+halt
