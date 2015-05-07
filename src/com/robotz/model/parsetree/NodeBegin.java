@@ -11,5 +11,13 @@ public class NodeBegin implements Node {
 	public String getNodeType() {
 		return this.nodeType;
 	}
+	
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	
+	public Node getNode() {
+		return this.node;
+	}
 
 }
