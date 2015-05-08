@@ -156,12 +156,19 @@ public class CommandController extends Controller {
 					ArrayList<Stack<Token>> resultDerivation = parser.getResultForDerivation();
 
 					int size = resultRule.size() - 1;
+					
+					// Store a full length of string
 					String derivationIncremental = "";
 
+					// Get each rule, started from the last rule
 					for (int i=size; i>=0; i--) {
+						
+						// Split, get the left symbol and right symbol as string array
 						String[] splitRule = resultRule.get(i).getProductionRuleAsString().split(" ", 3);
 						String leftSymbol = splitRule[0];
 						String[] rightSymbol = splitRule[2].split(" ");
+						
+						// Replace the right symbol with its value
 						for (int k=0; k<rightSymbol.length; k++) {
 							if (resultDerivation.get(i).peek().getType().equals("i")) {
 								rightSymbol[k] = rightSymbol[k].replace("int", resultDerivation.get(i).pop().getCharValue());
@@ -173,10 +180,17 @@ public class CommandController extends Controller {
 								resultDerivation.get(i).pop();
 							}
 						}
+						
+						// Join all right symbols string back together
 						String derivation = "";
 						for (int k=0; k<rightSymbol.length; k++) {
-							derivation += rightSymbol[k].trim() + " ";
+							if (k < rightSymbol.length-1)
+								derivation += rightSymbol[k].trim() + " ";
+							else
+								derivation += rightSymbol[k].trim();
 						}
+						
+						// Replace the left symbol with the its right symbols [started from the right]
 						if (derivationIncremental.contains(leftSymbol)) {
 							String[] d = derivationIncremental.split(" ");
 							for (int g=d.length-1; g>=0; g--) {
@@ -187,12 +201,14 @@ public class CommandController extends Controller {
 							}
 							derivationIncremental = "";
 							for (int a=0; a<d.length; a++) {
-								derivationIncremental += d[a] + " "; 
+								derivationIncremental += d[a] + " ";
 							}
 						}
 						else {
 							derivationIncremental = derivation; // begin
 						}
+						
+						// Add the item to the derivation table
 						frmMain.addDerivationItem(resultRule.get(i).getProductionRuleAsString(), derivationIncremental);
 					}
 				}

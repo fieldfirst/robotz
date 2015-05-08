@@ -8,6 +8,10 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.Document;
+import javax.swing.undo.UndoManager;
 
 public class EditController extends Controller {
 	
@@ -16,6 +20,8 @@ public class EditController extends Controller {
 	private EditCutAction editCutAction;
 	private EditCopyAction editCopyAction;
 	private EditPasteAction editPasteAction;
+	
+	private UndoManager undoManager;
 	
 	protected void initAction() {
 		editUndoAction = new EditUndoAction();
@@ -39,6 +45,19 @@ public class EditController extends Controller {
 			}
 			
 		});
+		
+		Document doc = frmMain.getJTextPane().getDocument();
+		undoManager = new UndoManager();
+		doc.addUndoableEditListener(new UndoableEditListener() {
+			
+			@Override
+			public void undoableEditHappened(UndoableEditEvent arg0) {
+				
+				undoManager.addEdit(arg0.getEdit());
+				updateUndoRedoStatus();
+				
+			}
+		});
 	}
 	
 	protected void assignMenuAction() {
@@ -56,6 +75,28 @@ public class EditController extends Controller {
 		frmMain.setToolBarPaste(editPasteAction);
 	}
 	
+	private void updateUndoRedoStatus() {
+		if (undoManager.canUndo()) {
+			editUndoAction.setEnabled(true);
+		}
+		else {
+			editUndoAction.setEnabled(false);
+		}
+		
+		if (undoManager.canRedo()) {
+			editRedoAction.setEnabled(true);
+		}
+		else {
+			editRedoAction.setEnabled(false);
+		}
+	}
+	
+	public void resetUndoRedoStatus() {
+		undoManager.discardAllEdits();
+		editUndoAction.setEnabled(false);
+		editRedoAction.setEnabled(false);
+	}
+	
 	private class EditUndoAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
@@ -65,10 +106,14 @@ public class EditController extends Controller {
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl Z"));
 			putValue(SHORT_DESCRIPTION, "Undo the latest change");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_A);
+			setEnabled(false);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			undoManager.undo();
+			updateUndoRedoStatus();
 
 		}
 		
@@ -83,10 +128,14 @@ public class EditController extends Controller {
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl shift Z"));
 			putValue(SHORT_DESCRIPTION, "Redo the latest change");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_A);
+			setEnabled(false);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			
+			undoManager.redo();
+			updateUndoRedoStatus();
 			
 		}
 		

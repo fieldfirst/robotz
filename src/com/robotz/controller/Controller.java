@@ -15,6 +15,13 @@ public class Controller {
 	protected static ErrorDialog errorDialog;
 	protected static AnimationPanel animationPanel;
 	
+	protected static FileController fileController;
+	protected static CommandController commandController;
+	protected static ViewController viewController;
+	protected static HelpController helpController;
+	protected static AddController addController;
+	protected static EditController editController;
+	
 	public Controller() {
 		initAction();
 		assignMenuAction();
@@ -33,12 +40,12 @@ public class Controller {
 			}
 		});
 		
-		new FileController();
-		new CommandController();
-		new ViewController();
-		new HelpController();
-		new AddController();
-		new EditController();
+		fileController = new FileController();
+		commandController = new CommandController();
+		viewController = new ViewController();
+		helpController = new HelpController();
+		addController = new AddController();
+		editController = new EditController();
 	}
 	
 	protected void assignMenuAction() {

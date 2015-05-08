@@ -3,7 +3,6 @@ package com.robotz.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;

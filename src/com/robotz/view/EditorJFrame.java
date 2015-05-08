@@ -4,6 +4,7 @@ package com.robotz.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.net.URL;
@@ -83,7 +84,6 @@ public class EditorJFrame extends JFrame {
 	private JButton toolBarExecute;
 	
 	private JToolBar addToolBar;
-	private Insets addToolBarButtonInsets;
 	private JButton toolBarRobot;
 	private JButton toolBarObstacle;
 	private JButton toolBarAdd;
@@ -117,11 +117,9 @@ public class EditorJFrame extends JFrame {
 	private void osSpecific() {
 		if (RobotMain.getOSName().contains("win")) {
 			toolBarButtonInsets = new Insets(8, 18, 8, 18);
-			addToolBarButtonInsets = new Insets(0, 0, 0, 0);
 		}
 		else if (RobotMain.getOSName().contains("mac")) {
 			toolBarButtonInsets = new Insets(6, 0, 0, 0);
-			addToolBarButtonInsets = new Insets(0, 0, 0, 0);
 		}
 	}
 	
@@ -312,8 +310,9 @@ public class EditorJFrame extends JFrame {
 		addToolBar = new JToolBar(null, JToolBar.VERTICAL);
 		addToolBar.setBackground(Color.WHITE);
 		addToolBar.setFloatable(false);
+		addToolBar.setLayout(new GridLayout(6, 1));
 		toolBarRobot = createAddToolBarButton("Robot", getClass().getResource("resources/robot.png"));
-		toolBarObstacle = createAddToolBarButton("Obstacle", getClass().getResource("resources/obstacle.png"));
+		toolBarObstacle = createAddToolBarButton("Obstacle.", getClass().getResource("resources/obstacle.png"));
 		toolBarAdd = createAddToolBarButton("Add", getClass().getResource("resources/add.png"));
 		toolBarMove = createAddToolBarButton("Move", getClass().getResource("resources/move.png"));
 		toolBarVariable = createAddToolBarButton("Variable", getClass().getResource("resources/variable.png"));
@@ -322,8 +321,10 @@ public class EditorJFrame extends JFrame {
 	
 	private JButton createAddToolBarButton(String title, URL iconPath) {
 		JButton t = new JButton(title, new ImageIcon(iconPath));
-		t.setUI(new FlatToolBarButtonUI());
-		t.setMargin(addToolBarButtonInsets);
+		t.setUI(new VerticalFlatToolBarButtonUI());
+		t.setVerticalTextPosition(SwingConstants.BOTTOM);
+		t.setHorizontalTextPosition(SwingConstants.CENTER);
+		t.setMargin(toolBarButtonInsets);
 		t.setBackground(Color.WHITE);
 		addToolBar.add(t);
 		return t;

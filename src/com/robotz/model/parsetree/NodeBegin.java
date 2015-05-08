@@ -3,8 +3,8 @@ package com.robotz.model.parsetree;
 public class NodeBegin implements Node {
 	
 	private String nodeType = "begin";
-	private int i;
-	private int j;
+	private Integer i;
+	private Integer j;
 	private Node node;
 
 	@Override
@@ -18,6 +18,22 @@ public class NodeBegin implements Node {
 	
 	public Node getNode() {
 		return this.node;
+	}
+	
+	public void setIReference(Integer iReference) {
+		this.i = iReference;
+	}
+	
+	public void setJReference(Integer jReference) {
+		this.j = jReference;
+	}
+	
+	public int getI() {
+		return i.intValue();
+	}
+	
+	public int getJ() {
+		return j.intValue();
 	}
 
 }

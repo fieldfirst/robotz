@@ -46,19 +46,19 @@ public class FileController extends Controller {
 		textPaneListener = new DocumentListener(){
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-				syntaxHighlighting();
+				//syntaxHighlighting();
 				fileSaveAction.setEnabled(true);
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
-				syntaxHighlighting();	
+				//syntaxHighlighting();	
 				fileSaveAction.setEnabled(true);
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				syntaxHighlighting();
+				//syntaxHighlighting();
 				fileSaveAction.setEnabled(true);
 			}
 		};
@@ -179,6 +179,7 @@ public class FileController extends Controller {
 		errorDialog.appendError("There is no error :)");
 		frmMain.clearTokenizedItem();
 		frmMain.clearDerivationItem();
+		editController.resetUndoRedoStatus();
 	}
 
 	private void syntaxHighlighting() {
