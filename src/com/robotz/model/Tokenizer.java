@@ -39,6 +39,11 @@ public class Tokenizer {
 	public void setLine(String lineString, int lineNumber) {
 		// Eliminate the comment parts with an empty string
 		lineString = lineString.replaceAll(COMMENT_PART, "");
+		// Replace the whitespace within a line with an only one whitespace
+		lineString = lineString.replaceAll("\\s+", " ");
+		// Eliminate the heading and trailing whitespace
+		lineString = lineString.trim();
+		
 		lineTokenizer = new StringTokenizer(lineString, " ");
 		this.currentLineNumber = lineNumber;
 		notSkipLine = true;
@@ -48,10 +53,11 @@ public class Tokenizer {
 	 *  Process the next token
 	 */
 	public void checkNextToken() {
+		
 		// Get a token then convert to the lower case
 		String tk = lineTokenizer.nextToken().toLowerCase().trim();
 		if (Pattern.matches(KEYWORD, tk)) {
-			lastToken = new TokenKeyword(tk.substring(0, 1), tk, currentLineNumber);		// Get the first character as a type
+			lastToken = new TokenKeyword(tk.substring(0, 1), tk, currentLineNumber);			// Get the first character as a type
 			lastType = RESERVED_TYPE;
 		}
 		else if (Pattern.matches(VARIABLE, tk)) {

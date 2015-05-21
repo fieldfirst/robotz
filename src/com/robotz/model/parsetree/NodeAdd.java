@@ -1,15 +1,34 @@
 package com.robotz.model.parsetree;
 
-public class NodeAdd implements Node {
+import com.robotz.model.Token;
 
-	private String nodeType = "add";
-	private Node a;
-	private String v;
+public class NodeAdd extends Node {
+
+	private final String nodeType = "add";
+	private Token value;
+	private String variableName;
 	
 	@Override
 	public String getNodeType() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return nodeType;
+		
+	}
+	
+	public String getVariableName() {
+		return variableName;
+	}
+
+	public void setVariableName(String variableName) {
+		this.variableName = variableName;
+	}
+
+	public Token getValue() {
+		return value;
+	}
+
+	public void setValue(Token value) {
+		this.value = value;
 	}
 
 }

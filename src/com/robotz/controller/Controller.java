@@ -4,7 +4,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import com.robotz.model.EditorModel;
-import com.robotz.view.AnimationPanel;
+import com.robotz.view.AnimationJFrame;
 import com.robotz.view.EditorJFrame;
 import com.robotz.view.ErrorDialog;
 
@@ -13,7 +13,7 @@ public class Controller {
 	protected static EditorJFrame frmMain;
 	protected EditorModel editorModel;
 	protected static ErrorDialog errorDialog;
-	protected static AnimationPanel animationPanel;
+	protected static AnimationJFrame animationDialog;
 	
 	protected static FileController fileController;
 	protected static CommandController commandController;
@@ -31,7 +31,7 @@ public class Controller {
 	protected void initAction() {
 		frmMain = new EditorJFrame();
 		errorDialog = ErrorDialog.getInstance();
-		animationPanel = frmMain.getAnimationPanel();
+		animationDialog = new AnimationJFrame();
 		
 		frmMain.addComponentListener(new ComponentAdapter(){
 			@Override

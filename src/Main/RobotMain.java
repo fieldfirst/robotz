@@ -1,5 +1,7 @@
 package Main;
 
+import java.util.ArrayList;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,6 +30,7 @@ public class RobotMain {
 		       // handle exception
 		}
 		new Controller();
+		
 	}
 	
 	public static String getOSName() {

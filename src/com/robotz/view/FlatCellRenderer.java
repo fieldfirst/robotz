@@ -17,6 +17,12 @@ public class FlatCellRenderer extends DefaultTableCellRenderer {
 	private final Color odd = new Color(224, 242, 241);
 	private final Color focused = new Color(77, 182, 172);
 	
+	private final Color updated = new Color(237, 108, 31);
+	
+	private int updatedRow = -1;
+	
+	private int counter = 0;
+	
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
@@ -31,7 +37,35 @@ public class FlatCellRenderer extends DefaultTableCellRenderer {
 		if (isSelected) {
 			c.setBackground(focused);
 		}
+		
+		if (row == updatedRow) {
+			
+			if (counter <= 1) {
+			
+				c.setBackground(updated);
+			
+				counter++;
+			
+			}
+		
+			else if (counter == 2) {
+			
+				c.setBackground(updated);
+			
+				updatedRow = -1;
+			
+				counter = 0;
+			
+			}
+		}
+		
 		return c;
 	}
 
+	public void setUpdatedRow(int updatedRow) {
+		
+		this.updatedRow = updatedRow;
+		
+	}
+	
 }

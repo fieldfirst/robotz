@@ -34,6 +34,9 @@ public class ParserContext {
 	
 	// Result : for derivation
 	private ArrayList<Stack<Token>> resultForDerivation = new ArrayList<Stack<Token>>();
+	
+	// Result : for build a parse tree
+	private ArrayList<Stack<Token>> resultForParseTree = new ArrayList<Stack<Token>>();
 
 	// Last error
 	private String lastError;
@@ -179,32 +182,51 @@ public class ParserContext {
 	}
 
 	public boolean parse() {
+		
 		// Store current state
 		ParserState currentState = states.get("0");		// Peek the input, then select the initial state
+		
+		gotoTable.put("P", "1");
 
 		while (! tokens.isEmpty()) {
-
-			// Update the goto table
-			if (currentState.hasGotoMap()) {
-				for (String nonTerminalSymbol : currentState.getGotoMap().keySet()) {
-					gotoTable.put(nonTerminalSymbol, currentState.getGotoMap().get(nonTerminalSymbol));
-				}
-			}
+			
 			if (currentState.getActionMap(tokens.peek().getType()) != null) {
+				
 				// Shift operation
-				if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(SHIFT)) {
+				if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(SHIFT)) {	
+					
 					parseStack.push(new ParserStackItem(tokens.peek().getType(), currentState.getActionMap(tokens.peek().getType()).get("number"), tokens.poll()));
+					
 				}
+				
 				// Reduce operation
 				else if (currentState.getActionMap(tokens.peek().getType()).get("operation").equals(REDUCE)) {
-					int ruleNumber = Integer.parseInt(currentState.getActionMap(tokens.peek().getType()).get("number"));
+					
+					int ruleNumber = Integer.parseInt(currentState.getActionMap(tokens.peek().getType()).get("number"));					
 					int numberOfTokens = grammars.get(ruleNumber).getExpressionSize();
+					
 					Stack<String> expression = new Stack<String>();
 					Stack<Token> forDerivationOutput = new Stack<Token>();
+					Stack<Token> forParseTreeOutput = new Stack<Token>();
 					for (int i=0; i<numberOfTokens; i++) {
 						forDerivationOutput.push(parseStack.peek().getToken());
+						forParseTreeOutput.push(parseStack.peek().getToken());
 						expression.push(parseStack.pop().getSymbol());
 					}
+					
+					// Update the goto table
+					if (! parseStack.isEmpty())	{
+						
+						ParserState st = states.get(parseStack.peek().getStateNumber());
+					
+						if (st.hasGotoMap()) {
+							for (String nonTerminalSymbol : st.getGotoMap().keySet()) {
+								gotoTable.put(nonTerminalSymbol, st.getGotoMap().get(nonTerminalSymbol));
+							}
+						}
+					}
+					
+					resultForParseTree.add(forParseTreeOutput);
 					resultForDerivation.add(forDerivationOutput);
 					if (grammars.get(ruleNumber).evaluate(expression)) {
 						parseStack.push(new ParserStackItem(grammars.get(ruleNumber).getLeftSymbol(), gotoTable.get(grammars.get(ruleNumber).getLeftSymbol()), tokens.peek()));
@@ -229,6 +251,7 @@ public class ParserContext {
 
 			// Set a new current state
 			currentState = states.get(parseStack.peek().getStateNumber());
+
 		}
 
 		return false;
@@ -246,8 +269,14 @@ public class ParserContext {
 		return this.resultForDerivation;
 	}
 	
+	public ArrayList<Stack<Token>> getResultForParseTree() {
+		return this.resultForParseTree;
+	}
+	
 	public void clearLastResult() {
 		resultProductionRule.clear();
 		resultForDerivation.clear();
+		resultForParseTree.clear();
+		parseStack.clear();
 	}
 }

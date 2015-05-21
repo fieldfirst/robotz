@@ -1,0 +1,5 @@
+begin 10 10
+	do
+		obstacle 1 1 ;
+	until a > 1 ;
+halt

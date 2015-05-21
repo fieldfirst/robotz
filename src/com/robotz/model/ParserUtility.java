@@ -24,6 +24,8 @@ public class ParserUtility {
 		typeToStringMap.put("t", "to");
 		typeToStringMap.put("o", "obstacle");
 		typeToStringMap.put(";", ";");
+		typeToStringMap.put(">", ">");
+		typeToStringMap.put("<", "<");
 	}
 	
 	public static String getTypeToStringMap(String key) {

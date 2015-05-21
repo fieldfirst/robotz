@@ -49,14 +49,6 @@ public class ViewController extends Controller {
 					viewDerivationAction.setEnabled(false);
 					viewAnimationAction.setEnabled(true);
 				}
-				else
-				{
-					animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
-					viewEditorAction.setEnabled(true);
-					viewSymbolTableAction.setEnabled(true);
-					viewDerivationAction.setEnabled(true);
-					viewAnimationAction.setEnabled(false);
-				}
 			}
 		});
 	}
@@ -153,12 +145,10 @@ public class ViewController extends Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			animationPanel.createTextures();		// Lazy initialization to increase an application startup performance.
-			frmMain.setTabIndex(3);
-			setEnabled(false);
-			viewEditorAction.setEnabled(true);
-			viewSymbolTableAction.setEnabled(true);
-			viewDerivationAction.setEnabled(true);
+			
+			animationDialog.setVisible(true);
+			animationDialog.setLocationRelativeTo(frmMain);
+			
 		}
 		
 	}

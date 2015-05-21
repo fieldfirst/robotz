@@ -8,4 +8,12 @@ robot eddy 3 9 ;
 
 move eddy north 4 ;
 
+a = 9 ;
+
+do
+
+add 3 to a ;
+
+until a > 10 ;
+
 halt

@@ -1,11 +1,13 @@
 package com.robotz.model;
 
+
 public class TokenInteger implements Token {
 
 	private int intValue;
 	private String charValue;
 	private String type;
 	private int lineNumber;
+	private int symbolTableRow;
 	
 	/***
 	 * Constructor of TokenInteger
@@ -41,6 +43,20 @@ public class TokenInteger implements Token {
 	@Override
 	public int getLineNumber() {
 		return lineNumber;
+	}
+
+	@Override
+	public void setSymbolTableRow(int row) {
+		
+		this.symbolTableRow = row;
+		
+	}
+
+	@Override
+	public int getSymbolTableRow() {
+
+		return this.symbolTableRow;
+		
 	}
 
 }

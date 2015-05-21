@@ -1,11 +1,13 @@
 package com.robotz.model;
 
+
 public class TokenKeyword implements Token {
 	
 	private int intValue;		// in this case integer value return null
 	private String charValue;	// in this case character value return null
 	private String type;
 	private int lineNumber;
+	private int symbolTableRow;
 	
 	/***
 	 * Constructor of TokenKeyword
@@ -40,5 +42,20 @@ public class TokenKeyword implements Token {
 	public int getLineNumber() {
 		return lineNumber;
 	}
+
+	@Override
+	public void setSymbolTableRow(int row) {
+		
+		this.symbolTableRow = row;
+		
+	}
+
+	@Override
+	public int getSymbolTableRow() {
+
+		return this.symbolTableRow;
+		
+	}
+
 
 }

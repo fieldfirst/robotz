@@ -3,6 +3,7 @@ package com.robotz.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -27,6 +28,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.BadLocationException;
 
 import Main.RobotMain;
@@ -95,8 +98,10 @@ public class EditorJFrame extends JFrame {
 	private JTabbedPane mainTabPane;
 	
 	private SymbolTableModel symbolTableModel;
+	private JTable derivationTable;
 	private DerivationTableModel derivationTableModel;
-	private AnimationPanel animationPanel;
+	
+	private FlatCellRenderer fcr = new FlatCellRenderer();
 
 	public EditorJFrame(){
 		osSpecific();
@@ -129,12 +134,10 @@ public class EditorJFrame extends JFrame {
 		initAddToolBar();
 		JPanel mainPanel = initMainPanal();
 		JPanel editorPanel = new JPanel(new BorderLayout());
-		animationPanel = new AnimationPanel();
 		editorPanel.add(initEditorPanel(), BorderLayout.CENTER);
 		mainTabPane.addTab("Editor", editorPanel);
 		mainTabPane.addTab("Symbol Table", initSymbolTablePanel());
 		mainTabPane.addTab("Derivation", initDerivationPanel());
-		mainTabPane.addTab("Animation", animationPanel);
 		mainPanel.add(mainToolBar, BorderLayout.NORTH);
 		mainPanel.add(addToolBar, BorderLayout.EAST);
 		mainPanel.add(mainTabPane, BorderLayout.CENTER);
@@ -144,19 +147,34 @@ public class EditorJFrame extends JFrame {
 	
 	private JScrollPane initDerivationPanel() {
 		derivationTableModel = new DerivationTableModel();
-		JTable derivationTable = new JTable(derivationTableModel);
+		derivationTable = new JTable(derivationTableModel);
 		derivationTable.setFillsViewportHeight(true);
-		FlatCellRenderer fcr = new FlatCellRenderer();
+		derivationTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		derivationTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+		derivationTable.getColumnModel().getColumn(1).setPreferredWidth(600);
 		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(0), fcr);
 		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(1), fcr);
 		return new JScrollPane(derivationTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	}
+	
+	public void autoResizeColumnWidth() {
+		JTable table = derivationTable;
+	    final TableColumnModel columnModel = table.getColumnModel();
+	    for (int column = 0; column < table.getColumnCount(); column++) {
+	        int width = 200; // Min width
+	        for (int row = 0; row < table.getRowCount(); row++) {
+	            TableCellRenderer renderer = table.getCellRenderer(row, column);
+	            Component comp = table.prepareRenderer(renderer, row, column);
+	            width = Math.max(comp.getPreferredSize().width, width);
+	        }
+	        columnModel.getColumn(column).setPreferredWidth(width+50);
+	    }
 	}
 	
 	private JScrollPane initSymbolTablePanel() {
 		symbolTableModel = new SymbolTableModel();
 		JTable symbolTable = new JTable(symbolTableModel);
 		symbolTable.setFillsViewportHeight(true);
-		FlatCellRenderer fcr = new FlatCellRenderer();
 		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(0), fcr);
 		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(1), fcr);
 		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(2), fcr);
@@ -541,10 +559,6 @@ public class EditorJFrame extends JFrame {
 		symbolTableModel.clearTable();
 	}
 	
-	public AnimationPanel getAnimationPanel() {
-		return animationPanel;
-	}
-	
 	public void setEditorTitle(String fileName) {
 		setTitle("Robotz - " + fileName);
 	}
@@ -582,11 +596,18 @@ public class EditorJFrame extends JFrame {
 	}
 	
 	public void setSymbolTableValueAt(Object value, int row, int col) {
+		
+		fcr.setUpdatedRow(row);
 		symbolTableModel.setValueAt(value, row, col);
+		
 	}
 	
 	public void resetTextPaneDocumentListener(DocumentListener listener) {
 		textPane.getDocument().removeDocumentListener(listener);
+	}
+	
+	public int getCurrentSymbolTableRow() {
+		return symbolTableModel.getRowCount() - 1;
 	}
 
 }
