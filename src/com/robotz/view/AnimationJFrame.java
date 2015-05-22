@@ -3,14 +3,20 @@ package com.robotz.view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultCaret;
 
 import com.robotz.view.texture.Ground;
 import com.robotz.view.texture.Obstacle;
@@ -22,12 +28,15 @@ public class AnimationJFrame extends JFrame {
 	
 	private JTextArea productionOutput;
 	private JPanel mainPanel;
-	private String productionIncremental = "";
 	
 	private ArrayList<ArrayList<JPanel>> tiles = new ArrayList<ArrayList<JPanel>>();
 	
+	private HashMap<String, Robot> robotMap = new HashMap<String, Robot>();
+	
 	private int mapWidth;
 	private int mapHeight;
+	
+	JSlider speedSlider;
 
 	public AnimationJFrame() {
 		
@@ -53,6 +62,10 @@ public class AnimationJFrame extends JFrame {
 		
 		productionOutput.setEditable(false);
 		
+		DefaultCaret caret = (DefaultCaret) productionOutput.getCaret();
+		
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
 		add(new JScrollPane(productionOutput), BorderLayout.SOUTH);
 		
 		mainPanel = new JPanel();
@@ -64,6 +77,24 @@ public class AnimationJFrame extends JFrame {
 		mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		add(mainScrollPane, BorderLayout.CENTER);
+		
+		speedSlider = new JSlider(500, 1500, 1000);
+		
+		speedSlider.setMinorTickSpacing(2);
+		
+		speedSlider.setMajorTickSpacing(10);
+		
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		
+		topPanel.add(new JLabel("Speed : "));
+		
+		topPanel.add(new JLabel("fast"));
+		
+		topPanel.add(speedSlider);
+		
+		topPanel.add(new JLabel("slow"));
+		
+		add(topPanel, BorderLayout.NORTH);
 		
 	}
 	
@@ -119,22 +150,31 @@ public class AnimationJFrame extends JFrame {
 	public void clear() {
 		
 		productionOutput.setText("");
-		productionIncremental = "";
 		tiles.clear();
 		
 	}
 	
 	public void addDescription(String productionRule) {
 		
-		productionIncremental += productionRule + "\n";
+		productionOutput.append(productionRule + "\n");
 		
-		productionOutput.setText(productionIncremental);
+	}
+	
+	public void setSpeedSliderListener(ChangeListener listener) {
+		
+		speedSlider.addChangeListener(listener);
+		
+	}
+	
+	public int getSpeedSliderValue() {
+		
+		return speedSlider.getValue();
 		
 	}
 	
 	public void addObstacle(int xPosition, int yPosition) {
 		
-		tiles.get(xPosition - 1).set(yPosition - 1, new Obstacle(xPosition, yPosition));
+		tiles.get(xPosition - 1).set(yPosition - 1, new Obstacle(xPosition - 1, yPosition - 1));
 		
 		reRenderGraphics();
 		
@@ -143,10 +183,50 @@ public class AnimationJFrame extends JFrame {
 	public void addRobot(String robotName, int xPosition, int yPosition) {
 		
 		//initial robot heading is north
-		tiles.get(xPosition - 1).set(yPosition - 1, new Robot(robotName, xPosition, yPosition));
+		tiles.get(xPosition - 1).set(yPosition - 1, new Robot(robotName, xPosition - 1, yPosition - 1, this));
+		
+		//add the robot to the robotMap HashMap for later call
+		robotMap.put(robotName, (Robot) tiles.get(xPosition - 1).get(yPosition - 1));
 		
 		reRenderGraphics();
 		
 	}
-
+	
+	public void moveRobot(String robotName, String direction, int distance, int threadSleepTime) throws InterruptedException {
+		
+		// Get the robot
+		Robot robot = robotMap.get(robotName);
+		
+		// Set a new heading
+		robot.setDirection(direction);
+		
+		int walked = 0;
+		
+		while (walked < distance) {
+			
+			robot.move(tiles);
+			
+			walked++;
+			
+			reRenderGraphics();
+			
+			addDescription("move " + robot.getRobotName() + " from (" + (robot.getOldXPosition()+1) + "," + (robot.getOldYPosition()+1) + ") to (" + (robot.getXPosition()+1) + "," + (robot.getYPosition()+1) + ")");
+			
+			Thread.sleep(threadSleepTime);
+			
+		}
+		
+	}
+	
+	public int getMaximumY() {
+		
+		return tiles.get(0).size() - 1;
+		
+	}
+	
+	public int getMaximumX() {
+		
+		return tiles.size() - 1;
+		
+	}
 }

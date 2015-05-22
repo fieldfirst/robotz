@@ -1,7 +1,12 @@
 package com.robotz.model;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.robotz.model.parsetree.Node;
 import com.robotz.model.parsetree.NodeAdd;
@@ -14,6 +19,7 @@ import com.robotz.model.parsetree.NodeRobot;
 import com.robotz.model.parsetree.NodeSequence;
 import com.robotz.view.AnimationJFrame;
 import com.robotz.view.EditorJFrame;
+import com.robotz.view.ErrorDialog;
 
 public class ExecuteEngine implements Runnable {
 		
@@ -36,19 +42,45 @@ public class ExecuteEngine implements Runnable {
 	
 	private AnimationJFrame animationJFrame;
 	private EditorJFrame frmMain;
+	private ErrorDialog errorDialog;
 	private Node rootNode;
 	
-	public ExecuteEngine(Node root, AnimationJFrame animationJFrame, EditorJFrame frmMain) {
+	private Thread animationRunner;
+	
+	public ExecuteEngine(Node root, final AnimationJFrame animationJFrame, EditorJFrame frmMain, ErrorDialog errordialog) {
 		
 		this.animationJFrame = animationJFrame;
 		this.frmMain = frmMain;
 		this.rootNode = root;
+		this.errorDialog = errordialog;
+		
+		animationJFrame.setSpeedSliderListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				
+				sleepTimer = animationJFrame.getSpeedSliderValue();
+								
+			}
+			
+		});
+		
+		animationJFrame.addWindowListener(new WindowAdapter(){
+			
+			@Override
+            public void windowClosing(WindowEvent we) {
+                
+				animationRunner.interrupt();
+				
+            }
+			
+		});
 		
 	}
 	
 	public void startAnimation() {
 		
-		Thread animationRunner = new Thread(this);
+		animationRunner = new Thread(this);
 		animationRunner.start();
 		
 	}
@@ -62,10 +94,12 @@ public class ExecuteEngine implements Runnable {
 			
 			locker.lock();
 			
+			errorDialog.clearError();
+			
 			treeTraversal(rootNode);
 			
 			animationJFrame.addDescription("finished");
-			
+						
 			locker.unlock();
 			
 		} catch (InterruptedException e) {
@@ -143,8 +177,10 @@ public class ExecuteEngine implements Runnable {
 		
 		else if (currentNode.equals(MOVE_NODE)) {
 			
+			NodeMove moveNode = (NodeMove) currentNode;
 			
-			
+			animationJFrame.moveRobot(moveNode.getVariableName(), moveNode.getDirection().getCharValue(), resolveToken(moveNode.getDistance()), sleepTimer);
+						
 		}
 		
 		Thread.sleep(sleepTimer);
@@ -152,9 +188,13 @@ public class ExecuteEngine implements Runnable {
 	}
 
 	private void assignNodeAction(Node currentNode) {
-				
-		variableMap.put(((NodeAssign) currentNode).getVariableName(), ((NodeAssign) currentNode).getValue().getIntValue());
 		
+		int valueToAssign = resolveToken(((NodeAssign) currentNode).getValue());
+		
+		variableMap.put(((NodeAssign) currentNode).getVariableName().getCharValue(), valueToAssign);
+		
+		frmMain.setSymbolTableValueAt(valueToAssign, ((NodeAssign) currentNode).getVariableName().getSymbolTableRow(), 2);
+				
 	}
 
 	private void beginNodeAction(Node currentNode) throws InterruptedException {
@@ -167,11 +207,10 @@ public class ExecuteEngine implements Runnable {
 		
 		treeTraversal(beginNode.getNode());
 		
-		
 	}
 
 	private void doNodeAction(Node currentNode) throws InterruptedException {
-				
+		
 		int counter;
 		
 		int maxLoop;
@@ -188,23 +227,58 @@ public class ExecuteEngine implements Runnable {
 			
 			counter = resolveToken(doNode.getA());
 			
+			// update the symbol table
+			frmMain.setSymbolTableValueAt(counter, doNode.getA().getSymbolTableRow(), 2);
+			
 		}
 		
 	}
 
 	private void addNodeAction(Node currentNode) {
 				
-		int oldValue = variableMap.get(((NodeAdd) currentNode).getVariableName());
+		int oldValue = variableMap.get(((NodeAdd) currentNode).getVariableName().getCharValue());
 		
-		variableMap.put(((NodeAdd) currentNode).getVariableName(), oldValue + ((NodeAdd) currentNode).getValue().getIntValue());
+		int newValue = oldValue + ((NodeAdd) currentNode).getValue().getIntValue();
+		
+		variableMap.put(((NodeAdd) currentNode).getVariableName().getCharValue(), newValue);
+		
+		frmMain.setSymbolTableValueAt(newValue, ((NodeAdd) currentNode).getVariableName().getSymbolTableRow(), 2);
 		
 	}
 	
 	private int resolveToken(Token tk) {
 		
+		/* If the variable is a token, then replace with the integer value from variableMap
+		 * 
+		 * Or return its integer value if it is already an integer token
+		 * 
+		 */
+		
+		
 		if (tk.getType().equals(VARIABLE_TOKEN)) {
 			
-			return variableMap.get(tk.getCharValue());
+			if (variableMap.containsKey(tk.getCharValue())) {
+				
+				// update the symbol table before return the int value
+				frmMain.setSymbolTableValueAt(variableMap.get(tk.getCharValue()), tk.getSymbolTableRow(), 2);
+				
+				return variableMap.get(tk.getCharValue());
+				
+			}
+			
+			else {
+				
+				errorDialog.appendError("Unknow variable : " + tk.getCharValue());
+				
+				errorDialog.setVisible(true);
+				
+				errorDialog.setLocationRelativeTo(frmMain);
+								
+				Thread.currentThread().interrupt();
+				
+				return -1;
+				
+			}
 			
 		}
 		

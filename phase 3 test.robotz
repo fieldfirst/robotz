@@ -1,0 +1,18 @@
+begin 80 100
+obstacle 8 11 ;
+obstacle 9 2 ;
+obstacle 5 6 ;
+robot rob 3 2 ;
+wall = 13 ;
+j = 1 ;
+do
+obstacle wall j ;
+add 1 to j ;
+until j > 10 ;
+run = 4 ;
+move rob east run ;
+move rob south 11 ;
+move rob east run ;
+move rob north 6 ;
+move rob west 7 ;
+halt

@@ -71,6 +71,7 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuReleaseNote;
 	private JMenuItem mnuShowIntroductionDialog;
 	private JMenuItem mnuAbout;
+	private JMenuItem mnuOpinion;
 	
 	private JToolBar mainToolBar;
 	private Insets toolBarButtonInsets;
@@ -99,6 +100,7 @@ public class EditorJFrame extends JFrame {
 	
 	private SymbolTableModel symbolTableModel;
 	private JTable derivationTable;
+	private JTable symbolTable;
 	private DerivationTableModel derivationTableModel;
 	
 	private FlatCellRenderer fcr = new FlatCellRenderer();
@@ -173,7 +175,7 @@ public class EditorJFrame extends JFrame {
 	
 	private JScrollPane initSymbolTablePanel() {
 		symbolTableModel = new SymbolTableModel();
-		JTable symbolTable = new JTable(symbolTableModel);
+		symbolTable = new JTable(symbolTableModel);
 		symbolTable.setFillsViewportHeight(true);
 		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(0), fcr);
 		symbolTable.setDefaultRenderer(symbolTable.getModel().getColumnClass(1), fcr);
@@ -277,8 +279,8 @@ public class EditorJFrame extends JFrame {
 		mnuView.add(mnuAnimation);
 		mnuView.add(new JSeparator());
 		mnuView.add(mnuError);
-		mnuView.add(new JSeparator());
-		mnuView.add(mnuConfig);
+		//mnuView.add(new JSeparator());
+		//mnuView.add(mnuConfig);
 	}
 	
 	private void initHelpMenu() {
@@ -291,6 +293,8 @@ public class EditorJFrame extends JFrame {
 		mnuHelp.add(mnuShowIntroductionDialog);
 		mnuHelp.add(new JSeparator());
 		mnuHelp.add(mnuAbout);
+		mnuOpinion = new JMenuItem();
+		mnuHelp.add(mnuOpinion);
 	}
 
 	private void initToolbar() {
@@ -434,6 +438,10 @@ public class EditorJFrame extends JFrame {
 	
 	public void setMnuConfigAction(Action action) {
 		mnuConfig.setAction(action);
+	}
+	
+	public void setMnuOpinionAction(Action action) {
+		mnuOpinion.setAction(action);
 	}
 	
 	public void setTabIndex(int index) {
@@ -599,6 +607,7 @@ public class EditorJFrame extends JFrame {
 		
 		fcr.setUpdatedRow(row);
 		symbolTableModel.setValueAt(value, row, col);
+		symbolTable.repaint();
 		
 	}
 	

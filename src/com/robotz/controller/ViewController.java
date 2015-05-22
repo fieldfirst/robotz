@@ -16,7 +16,7 @@ public class ViewController extends Controller {
 	private ViewSymbolTableAction viewSymbolTableAction;
 	private ViewDerivationAction viewDerivationAction;
 	private ViewAnimationAction viewAnimationAction;
-	private ViewConfigurationAction viewConfigurationAction;
+	//private ViewConfigurationAction viewConfigurationAction;
 	private ViewErrorAction viewErrorAction;
 	
 	protected void initAction() {
@@ -24,7 +24,7 @@ public class ViewController extends Controller {
 		viewSymbolTableAction = new ViewSymbolTableAction();
 		viewDerivationAction = new ViewDerivationAction();
 		viewAnimationAction = new ViewAnimationAction();
-		viewConfigurationAction = new ViewConfigurationAction();
+		//viewConfigurationAction = new ViewConfigurationAction();
 		viewErrorAction = new ViewErrorAction();
 		
 		frmMain.setTabChangeListener(new ChangeListener(){
@@ -59,7 +59,7 @@ public class ViewController extends Controller {
 		frmMain.setMnuSymbolTableAction(viewSymbolTableAction);
 		frmMain.setMnuAnimationAction(viewAnimationAction);
 		frmMain.setMnuErrorAction(viewErrorAction);
-		frmMain.setMnuConfigAction(viewConfigurationAction);
+		//frmMain.setMnuConfigAction(viewConfigurationAction);
 	}
 	
 	protected void assignToolBarAction() {
@@ -172,22 +172,22 @@ public class ViewController extends Controller {
 		
 	}
 	
-	private class ViewConfigurationAction extends AbstractAction {
-
-		private static final long serialVersionUID = -957102144625612679L;
-		
-		private ViewConfigurationAction(){
-			super("Configuration", new ImageIcon(frmMain.getClass().getResource("resources/configuration.png")));
-			putValue(SHORT_DESCRIPTION, "View the configuation panel");
-			putValue(MNEMONIC_KEY, KeyEvent.VK_G);
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+//	private class ViewConfigurationAction extends AbstractAction {
+//
+//		private static final long serialVersionUID = -957102144625612679L;
+//		
+//		private ViewConfigurationAction(){
+//			super("Configuration", new ImageIcon(frmMain.getClass().getResource("resources/configuration.png")));
+//			putValue(SHORT_DESCRIPTION, "View the configuation panel");
+//			putValue(MNEMONIC_KEY, KeyEvent.VK_G);
+//		}
+//
+//		@Override
+//		public void actionPerformed(ActionEvent arg0) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//	}
 
 }

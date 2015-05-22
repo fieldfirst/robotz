@@ -5,7 +5,7 @@ import com.robotz.model.Token;
 public class NodeAssign extends Node {
 	
 	private final String nodeType = "assn";
-	private String variableName;
+	private Token variableName;
 	private Token value;
 	
 	@Override
@@ -15,11 +15,11 @@ public class NodeAssign extends Node {
 		
 	}
 
-	public String getVariableName() {
+	public Token getVariableName() {
 		return variableName;
 	}
 
-	public void setVariableName(String variableName) {
+	public void setVariableName(Token variableName) {
 		this.variableName = variableName;
 	}
 

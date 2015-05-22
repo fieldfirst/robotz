@@ -31,9 +31,9 @@ public class Obstacle extends JPanel {
 		
 		setLayout(null);
 		
-		this.xPosition = xPosition;
+		this.xPosition = xPosition + 1;
 		
-		this.yPosition = yPosition;
+		this.yPosition = yPosition + 1;
 		
 	}
 

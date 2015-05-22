@@ -1,7 +1,5 @@
 package Main;
 
-import java.util.ArrayList;
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

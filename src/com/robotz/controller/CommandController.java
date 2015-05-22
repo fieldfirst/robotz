@@ -325,13 +325,13 @@ public class CommandController extends Controller {
 						
 						resultToken.get(i).pop();
 						
-						createAddNode(leftSymbol, resultToken.get(i).pop().getCharValue(), resultRule.get(i).getProductionRuleAsString());
+						createAddNode(leftSymbol, resultToken.get(i).pop(), resultRule.get(i).getProductionRuleAsString());
 						
 					}
 						
 					else if (rightSymbol[0].equals("var")) {
 						
-						createAssignNode(leftSymbol, resultToken.get(i).pop().getCharValue(), resultRule.get(i).getProductionRuleAsString());
+						createAssignNode(leftSymbol, resultToken.get(i).pop(), resultRule.get(i).getProductionRuleAsString());
 												
 					}
 						
@@ -411,7 +411,7 @@ public class CommandController extends Controller {
 			
 		}
 
-		private void createAssignNode(String leftSymbol, String variableName, String productionRule) {
+		private void createAssignNode(String leftSymbol, Token variableName, String productionRule) {
 			
 			NodeAssign node = new NodeAssign();
 			
@@ -427,7 +427,7 @@ public class CommandController extends Controller {
 			
 		}
 
-		private void createAddNode(String leftSymbol, String variableName, String productionRule) {
+		private void createAddNode(String leftSymbol, Token variableName, String productionRule) {
 			
 			NodeAdd node = new NodeAdd();
 			
@@ -528,7 +528,7 @@ public class CommandController extends Controller {
 				animationDialog.setLocationRelativeTo(frmMain);
 				animationDialog.clear();
 			
-				ExecuteEngine en = new ExecuteEngine(root, animationDialog, frmMain);
+				ExecuteEngine en = new ExecuteEngine(root, animationDialog, frmMain, errorDialog);
 				
 				en.startAnimation();
 				

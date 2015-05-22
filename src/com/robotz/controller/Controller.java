@@ -3,7 +3,6 @@ package com.robotz.controller;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import com.robotz.model.EditorModel;
 import com.robotz.view.AnimationJFrame;
 import com.robotz.view.EditorJFrame;
 import com.robotz.view.ErrorDialog;
@@ -11,7 +10,6 @@ import com.robotz.view.ErrorDialog;
 public class Controller {
 	
 	protected static EditorJFrame frmMain;
-	protected EditorModel editorModel;
 	protected static ErrorDialog errorDialog;
 	protected static AnimationJFrame animationDialog;
 	

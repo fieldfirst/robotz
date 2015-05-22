@@ -6,7 +6,7 @@ public class NodeAdd extends Node {
 
 	private final String nodeType = "add";
 	private Token value;
-	private String variableName;
+	private Token variableName;
 	
 	@Override
 	public String getNodeType() {
@@ -15,11 +15,11 @@ public class NodeAdd extends Node {
 		
 	}
 	
-	public String getVariableName() {
+	public Token getVariableName() {
 		return variableName;
 	}
 
-	public void setVariableName(String variableName) {
+	public void setVariableName(Token variableName) {
 		this.variableName = variableName;
 	}
 
