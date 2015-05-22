@@ -1,4 +1,4 @@
-package com.robotz.view.texture;
+package com.robotz.view;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,9 +9,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import com.robotz.view.AnimationJFrame;
-
-public class Robot extends JPanel {
+public class Robot extends JPanel implements Texture {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -39,8 +37,10 @@ public class Robot extends JPanel {
 	
 	private AnimationJFrame animationJFrame;
 	
-	// Store a ground object name for comparison
-	private final String GROUND = "com.robotz.view.texture.Ground";
+	private final String textureName = "Robot";
+	
+	// Store a ground object type for comparison
+	private final String GROUND = "Ground";
 	
 	public Robot(String name, int xPosition, int yPosition, AnimationJFrame animationJFrame) {
 		
@@ -107,37 +107,37 @@ public class Robot extends JPanel {
 		
 		case 1 : 
 			
-			NORTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_north_red.png"));
+			NORTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_north_red.png"));
 			
-			EAST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_east_red.png"));
+			EAST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_east_red.png"));
 			
-			WEST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_west_red.png"));
+			WEST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_west_red.png"));
 			
-			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_south_red.png"));
+			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_south_red.png"));
 						
 			break;
 			
 		case 2 : 
 			
-			NORTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_north_yellow.png"));
+			NORTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_north_yellow.png"));
 			
-			EAST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_east_yellow.png"));
+			EAST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_east_yellow.png"));
 			
-			WEST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_west_yellow.png"));
+			WEST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_west_yellow.png"));
 			
-			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_south_yellow.png"));
+			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_south_yellow.png"));
 						
 			break;
 			
 		case 3 :
 			
-			NORTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_north_gray.png"));
+			NORTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_north_gray.png"));
 			
-			EAST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_east_gray.png"));
+			EAST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_east_gray.png"));
 			
-			WEST_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_west_gray.png"));
+			WEST_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_west_gray.png"));
 			
-			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("../resources/robot_south_gray.png"));
+			SOUTH_TEXTURE = new ImageIcon(getClass().getResource("resources/robot_south_gray.png"));
 						
 			break;
 		
@@ -270,7 +270,7 @@ public class Robot extends JPanel {
 			
 			// if the next tile isn't the Ground, then it must be an obstacle or another robot
 			
-			if (! tiles.get(xPosition).get(yPosition - 1).getClass().getName().equals(GROUND)) {
+			if (! ((Texture) tiles.get(xPosition).get(yPosition - 1)).getTextureName().equals(GROUND)) {
 				
 				return false;
 			}
@@ -279,7 +279,7 @@ public class Robot extends JPanel {
 		
 		else if (currentDirection.equals(SOUTH_DIRECTION)) {
 			
-			if (! tiles.get(xPosition).get(yPosition + 1).getClass().getName().equals(GROUND)) {
+			if (! ((Texture) tiles.get(xPosition).get(yPosition + 1)).getTextureName().equals(GROUND)) {
 				
 				return false;
 			}
@@ -288,7 +288,7 @@ public class Robot extends JPanel {
 		
 		else if (currentDirection.equals(WEST_DIRECTION)) {
 			
-			if (! tiles.get(xPosition -  1).get(yPosition).getClass().getName().equals(GROUND)) {
+			if (! ((Texture) tiles.get(xPosition -  1).get(yPosition)).getTextureName().equals(GROUND)) {
 				
 				return false;
 			}
@@ -297,7 +297,7 @@ public class Robot extends JPanel {
 		
 		else if (currentDirection.equals(EAST_DIRECTION)) {
 			
-			if (! tiles.get(xPosition + 1).get(yPosition).getClass().getName().equals(GROUND)) {
+			if (! ((Texture) tiles.get(xPosition + 1).get(yPosition)).getTextureName().equals(GROUND)) {
 				
 				return false;
 			}
@@ -315,7 +315,7 @@ public class Robot extends JPanel {
 		if (currentDirection.equals(NORTH_DIRECTION)) {
 			
 			if (this.yPosition == 0) {
-				
+								
 				return false;
 			}
 			
@@ -324,7 +324,7 @@ public class Robot extends JPanel {
 		else if (currentDirection.equals(SOUTH_DIRECTION)) {
 			
 			if (this.yPosition == animationJFrame.getMaximumY()) {
-				
+								
 				return false;
 				
 			}
@@ -334,7 +334,7 @@ public class Robot extends JPanel {
 		else if (currentDirection.equals(WEST_DIRECTION)) {
 			
 			if (this.xPosition == 0) {
-				
+								
 				return false;
 				
 			}
@@ -344,7 +344,7 @@ public class Robot extends JPanel {
 		else if (currentDirection.equals(EAST_DIRECTION)) {
 			
 			if (this.xPosition == animationJFrame.getMaximumX()) {
-				
+								
 				return false;
 				
 			}
@@ -406,6 +406,12 @@ public class Robot extends JPanel {
 
 	public int getOldYPosition() {
 		return oldYPosition;
+	}
+	
+	public String getTextureName() {
+		
+		return this.textureName;
+		
 	}
 	
 }

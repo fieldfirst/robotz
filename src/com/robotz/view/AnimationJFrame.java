@@ -18,10 +18,6 @@ import javax.swing.JTextArea;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultCaret;
 
-import com.robotz.view.texture.Ground;
-import com.robotz.view.texture.Obstacle;
-import com.robotz.view.texture.Robot;
-
 public class AnimationJFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -174,7 +170,7 @@ public class AnimationJFrame extends JFrame {
 	
 	public void addObstacle(int xPosition, int yPosition) {
 		
-		tiles.get(xPosition - 1).set(yPosition - 1, new Obstacle(xPosition - 1, yPosition - 1));
+		tiles.get(xPosition - 1).set(yPosition, new Obstacle(xPosition, yPosition));
 		
 		reRenderGraphics();
 		
@@ -183,10 +179,10 @@ public class AnimationJFrame extends JFrame {
 	public void addRobot(String robotName, int xPosition, int yPosition) {
 		
 		//initial robot heading is north
-		tiles.get(xPosition - 1).set(yPosition - 1, new Robot(robotName, xPosition - 1, yPosition - 1, this));
+		tiles.get(xPosition).set(yPosition, new Robot(robotName, xPosition, yPosition, this));
 		
 		//add the robot to the robotMap HashMap for later call
-		robotMap.put(robotName, (Robot) tiles.get(xPosition - 1).get(yPosition - 1));
+		robotMap.put(robotName, (Robot) tiles.get(xPosition).get(yPosition));
 		
 		reRenderGraphics();
 		
@@ -219,13 +215,13 @@ public class AnimationJFrame extends JFrame {
 	}
 	
 	public int getMaximumY() {
-		
+				
 		return tiles.get(0).size() - 1;
 		
 	}
 	
 	public int getMaximumX() {
-		
+				
 		return tiles.size() - 1;
 		
 	}

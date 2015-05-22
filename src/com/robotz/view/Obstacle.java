@@ -1,4 +1,4 @@
-package com.robotz.view.texture;
+package com.robotz.view;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,7 +7,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-public class Obstacle extends JPanel {
+public class Obstacle extends JPanel implements Texture {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,9 +17,11 @@ public class Obstacle extends JPanel {
 	
 	private int yPosition;
 	
+	private final String textureName = "Obstacle";
+	
 	public Obstacle(int xPosition, int yPosition) {
 		
-		ImageIcon obstacleTexture = new ImageIcon(getClass().getResource("../resources/obstacle_texture.png"));
+		ImageIcon obstacleTexture = new ImageIcon(getClass().getResource("resources/obstacle_texture.png"));
 				
 		Dimension size = new Dimension(obstacleTexture.getIconWidth(), obstacleTexture.getIconHeight());
 		
@@ -43,6 +45,12 @@ public class Obstacle extends JPanel {
 		g.drawImage(obstacle, 0, 0, null);
 		
 		g.drawString(xPosition + "," + yPosition, 20, 60);
+		
+	}
+	
+	public String getTextureName() {
+		
+		return this.textureName;
 		
 	}
 
