@@ -1,0 +1,52 @@
+begin 10 10
+
+	k = 1 ;
+
+	robot bob 4 2 ;
+
+	robot john 2 0 ;
+
+	robot eddy 3 0 ;
+
+	obstacle 2 2 ;
+
+	obstacle 2 3 ;
+
+	obstacle 2 4 ;
+
+	obstacle 2 5 ;
+
+	i = 2 ;
+
+	do
+		
+		obstacle i 6 ;
+
+		add k to i ;
+
+	until i > 6 ;
+
+	a = 2 ;
+
+	do
+
+		obstacle 7 a ;
+
+		add 1 to a ;
+
+	until a > 6 ;
+
+	do
+
+		move bob east 1 ;
+
+		add 1 to k ;
+
+	until k > 8 ;
+
+
+	move bob west 3 ;
+
+	move bob south 4 ;
+
+halt

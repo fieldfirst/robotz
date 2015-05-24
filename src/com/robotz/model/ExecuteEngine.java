@@ -219,6 +219,8 @@ public class ExecuteEngine implements Runnable {
 		
 		counter = resolveToken(doNode.getA());
 		
+		int oldCounter = counter;
+		
 		maxLoop = resolveToken(doNode.getB());
 		
 		while (counter <= maxLoop) {
@@ -232,13 +234,16 @@ public class ExecuteEngine implements Runnable {
 			
 		}
 		
+		// force reset the counter value to the initial value
+		variableMap.put(doNode.getA().getCharValue(), oldCounter);
+		
 	}
 
 	private void addNodeAction(Node currentNode) {
-				
-		int oldValue = variableMap.get(((NodeAdd) currentNode).getVariableName().getCharValue());
+
+		int oldValue = resolveToken(((NodeAdd) currentNode).getVariableName());
 		
-		int newValue = oldValue + ((NodeAdd) currentNode).getValue().getIntValue();
+		int newValue = oldValue + resolveToken(((NodeAdd) currentNode).getValue());
 		
 		variableMap.put(((NodeAdd) currentNode).getVariableName().getCharValue(), newValue);
 		

@@ -74,7 +74,7 @@ public class Robot extends JPanel implements Texture {
 		
 		g.drawString(variableName, 20, 50);
 		
-		g.drawString((xPosition + 1) + "," + (yPosition + 1), 20, 62);
+		g.drawString(xPosition + "," + yPosition, 20, 62);
 		
 	}
 	

@@ -33,9 +33,9 @@ public class Obstacle extends JPanel implements Texture {
 		
 		setLayout(null);
 		
-		this.xPosition = xPosition + 1;
+		this.xPosition = xPosition;
 		
-		this.yPosition = yPosition + 1;
+		this.yPosition = yPosition;
 		
 	}
 

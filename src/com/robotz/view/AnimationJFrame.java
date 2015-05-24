@@ -170,7 +170,7 @@ public class AnimationJFrame extends JFrame {
 	
 	public void addObstacle(int xPosition, int yPosition) {
 		
-		tiles.get(xPosition - 1).set(yPosition, new Obstacle(xPosition, yPosition));
+		tiles.get(xPosition).set(yPosition, new Obstacle(xPosition, yPosition));
 		
 		reRenderGraphics();
 		
@@ -206,7 +206,7 @@ public class AnimationJFrame extends JFrame {
 			
 			reRenderGraphics();
 			
-			addDescription("move " + robot.getRobotName() + " from (" + (robot.getOldXPosition()+1) + "," + (robot.getOldYPosition()+1) + ") to (" + (robot.getXPosition()+1) + "," + (robot.getYPosition()+1) + ")");
+			addDescription("move " + robot.getRobotName() + " from (" + robot.getOldXPosition() + "," + robot.getOldYPosition() + ") to (" + robot.getXPosition() + "," + robot.getYPosition() + ")");
 			
 			Thread.sleep(threadSleepTime);
 			
