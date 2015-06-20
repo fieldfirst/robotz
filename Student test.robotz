@@ -47,6 +47,6 @@ begin 10 10
 
 	move bob west 3 ;
 
-	move bob south 4 ;
+	move bob south 8 ;
 
 halt

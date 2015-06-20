@@ -29,7 +29,7 @@ public class Controller {
 	protected void initAction() {
 		frmMain = new EditorJFrame();
 		errorDialog = ErrorDialog.getInstance();
-		animationDialog = new AnimationJFrame();
+		animationDialog = new AnimationJFrame(errorDialog, frmMain);
 		
 		frmMain.addComponentListener(new ComponentAdapter(){
 			@Override
