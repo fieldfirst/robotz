@@ -1,18 +1,27 @@
-package com.robotz.model.parsetree;
+package com.robotz.model.parser.parsetree;
 
-import com.robotz.model.Token;
+import com.robotz.model.tokenizer.Token;
 
-public class NodeObstacle extends Node {
+public class NodeRobot extends Node {
 
-	private final String nodeType = "obst";
+	private final String nodeType = "robot";
+	private String variableName;
 	private Token xPosition;
 	private Token yPosition;
-
+	
 	@Override
 	public String getNodeType() {
 		
 		return nodeType;
 		
+	}
+
+	public String getVariableName() {
+		return variableName;
+	}
+
+	public void setVariableName(String variableName) {
+		this.variableName = variableName;
 	}
 
 	public Token getxPosition() {

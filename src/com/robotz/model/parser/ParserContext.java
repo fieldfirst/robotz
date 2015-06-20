@@ -1,4 +1,4 @@
-package com.robotz.model;
+package com.robotz.model.parser;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.Stack;
 
-import com.robotz.model.grammar.GrammarRule;
+import com.robotz.model.tokenizer.Token;
+import com.robotz.model.tokenizer.TokenKeyword;
 
 public class ParserContext {
 

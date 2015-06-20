@@ -1,4 +1,6 @@
-package com.robotz.model;
+package com.robotz.model.parser;
+
+import com.robotz.model.tokenizer.Token;
 
 public class ParserStackItem {
 

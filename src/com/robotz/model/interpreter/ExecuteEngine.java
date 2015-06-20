@@ -1,4 +1,4 @@
-package com.robotz.model;
+package com.robotz.model.interpreter;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -8,15 +8,16 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.robotz.model.parsetree.Node;
-import com.robotz.model.parsetree.NodeAdd;
-import com.robotz.model.parsetree.NodeAssign;
-import com.robotz.model.parsetree.NodeBegin;
-import com.robotz.model.parsetree.NodeDo;
-import com.robotz.model.parsetree.NodeMove;
-import com.robotz.model.parsetree.NodeObstacle;
-import com.robotz.model.parsetree.NodeRobot;
-import com.robotz.model.parsetree.NodeSequence;
+import com.robotz.model.parser.parsetree.Node;
+import com.robotz.model.parser.parsetree.NodeAdd;
+import com.robotz.model.parser.parsetree.NodeAssign;
+import com.robotz.model.parser.parsetree.NodeBegin;
+import com.robotz.model.parser.parsetree.NodeDo;
+import com.robotz.model.parser.parsetree.NodeMove;
+import com.robotz.model.parser.parsetree.NodeObstacle;
+import com.robotz.model.parser.parsetree.NodeRobot;
+import com.robotz.model.parser.parsetree.NodeSequence;
+import com.robotz.model.tokenizer.Token;
 import com.robotz.view.AnimationJFrame;
 import com.robotz.view.EditorJFrame;
 import com.robotz.view.ErrorDialog;

@@ -11,23 +11,23 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import com.robotz.model.ExecuteEngine;
-import com.robotz.model.ParserContext;
-import com.robotz.model.Token;
-import com.robotz.model.TokenInteger;
-import com.robotz.model.TokenKeyword;
-import com.robotz.model.Tokenizer;
-import com.robotz.model.grammar.GrammarRule;
-import com.robotz.model.parsetree.Node;
-import com.robotz.model.parsetree.NodeAdd;
-import com.robotz.model.parsetree.NodeAssign;
-import com.robotz.model.parsetree.NodeBegin;
-import com.robotz.model.parsetree.NodeDo;
-import com.robotz.model.parsetree.NodeMove;
-import com.robotz.model.parsetree.NodeObstacle;
-import com.robotz.model.parsetree.NodeRobot;
-import com.robotz.model.parsetree.NodeSequence;
-import com.robotz.model.parsetree.STStackItem;
+import com.robotz.model.interpreter.ExecuteEngine;
+import com.robotz.model.parser.GrammarRule;
+import com.robotz.model.parser.ParserContext;
+import com.robotz.model.parser.parsetree.Node;
+import com.robotz.model.parser.parsetree.NodeAdd;
+import com.robotz.model.parser.parsetree.NodeAssign;
+import com.robotz.model.parser.parsetree.NodeBegin;
+import com.robotz.model.parser.parsetree.NodeDo;
+import com.robotz.model.parser.parsetree.NodeMove;
+import com.robotz.model.parser.parsetree.NodeObstacle;
+import com.robotz.model.parser.parsetree.NodeRobot;
+import com.robotz.model.parser.parsetree.NodeSequence;
+import com.robotz.model.parser.parsetree.STStackItem;
+import com.robotz.model.tokenizer.Token;
+import com.robotz.model.tokenizer.TokenInteger;
+import com.robotz.model.tokenizer.TokenKeyword;
+import com.robotz.model.tokenizer.Tokenizer;
 
 public class CommandController extends Controller {
 
@@ -144,7 +144,7 @@ public class CommandController extends Controller {
 		private CommandCompileAction(){
 			super("Compile", new ImageIcon(frmMain.getClass().getResource("resources/compile.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl alt C"));
-			putValue(SHORT_DESCRIPTION, "Invoke a compiler");
+			putValue(SHORT_DESCRIPTION, "Invoke a parser");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_P);
 		}
 
@@ -509,7 +509,7 @@ public class CommandController extends Controller {
 		private CommandExecuteAction(){
 			super("Execute", new ImageIcon(frmMain.getClass().getResource("resources/execute.png")));
 			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl shift X"));
-			putValue(SHORT_DESCRIPTION, "Execute the command(s)");
+			putValue(SHORT_DESCRIPTION, "Execute the interpreter");
 			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
 		}
 

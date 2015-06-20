@@ -34,8 +34,6 @@ import javax.swing.text.BadLocationException;
 
 import Main.RobotMain;
 
-import com.robotz.model.SyntaxHighlighter;
-
 public class EditorJFrame extends JFrame {
 
 	private static final long serialVersionUID = -2317507914722664644L;
@@ -46,7 +44,7 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuSave;
 	private JMenuItem mnuSaveAs;
 	private JMenuItem mnuExit;
-	
+
 	private JMenu mnuEdit;
 	private JMenuItem mnuUndo;
 	private JMenuItem mnuRedo;
@@ -58,7 +56,7 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuTokenize;
 	private JMenuItem mnuCompile;
 	private JMenuItem mnuExecute;
-	
+
 	private JMenu mnuView;
 	private JMenuItem mnuEditor;
 	private JMenuItem mnuSymbolTable;
@@ -66,13 +64,13 @@ public class EditorJFrame extends JFrame {
 	private JMenuItem mnuAnimation;
 	private JMenuItem mnuError;
 	private JMenuItem mnuConfig;
-	
+
 	private JMenu mnuHelp;
 	private JMenuItem mnuReleaseNote;
 	private JMenuItem mnuShowIntroductionDialog;
 	private JMenuItem mnuAbout;
 	private JMenuItem mnuOpinion;
-	
+
 	private JToolBar mainToolBar;
 	private Insets toolBarButtonInsets;
 	private JButton toolBarUndo;
@@ -86,7 +84,7 @@ public class EditorJFrame extends JFrame {
 	private JButton toolBarTokenize;
 	private JButton toolBarCompile;
 	private JButton toolBarExecute;
-	
+
 	private JToolBar addToolBar;
 	private JButton toolBarRobot;
 	private JButton toolBarObstacle;
@@ -94,15 +92,15 @@ public class EditorJFrame extends JFrame {
 	private JButton toolBarMove;
 	private JButton toolBarVariable;
 	private JButton toolBarDo;
-	
+
 	private JTextPane textPane;
 	private JTabbedPane mainTabPane;
-	
+
 	private SymbolTableModel symbolTableModel;
 	private JTable derivationTable;
 	private JTable symbolTable;
 	private DerivationTableModel derivationTableModel;
-	
+
 	private FlatCellRenderer fcr = new FlatCellRenderer();
 
 	public EditorJFrame(){
@@ -117,10 +115,9 @@ public class EditorJFrame extends JFrame {
 		setMinimumSize(new Dimension(900, 600));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
-		
-		new SyntaxHighlighter(textPane).execute();
+
 	}
-	
+
 	private void osSpecific() {
 		if (RobotMain.getOSName().contains("win")) {
 			toolBarButtonInsets = new Insets(8, 18, 8, 18);
@@ -129,7 +126,7 @@ public class EditorJFrame extends JFrame {
 			toolBarButtonInsets = new Insets(6, 0, 0, 0);
 		}
 	}
-	
+
 	private void initComponent() {
 		initMenu();
 		initToolbar();
@@ -146,7 +143,7 @@ public class EditorJFrame extends JFrame {
 		mainPanel.setBackground(Color.WHITE);
 		add(mainPanel);
 	}
-	
+
 	private JScrollPane initDerivationPanel() {
 		derivationTableModel = new DerivationTableModel();
 		derivationTable = new JTable(derivationTableModel);
@@ -158,21 +155,21 @@ public class EditorJFrame extends JFrame {
 		derivationTable.setDefaultRenderer(derivationTable.getModel().getColumnClass(1), fcr);
 		return new JScrollPane(derivationTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	}
-	
+
 	public void autoResizeColumnWidth() {
 		JTable table = derivationTable;
-	    final TableColumnModel columnModel = table.getColumnModel();
-	    for (int column = 0; column < table.getColumnCount(); column++) {
-	        int width = 200; // Min width
-	        for (int row = 0; row < table.getRowCount(); row++) {
-	            TableCellRenderer renderer = table.getCellRenderer(row, column);
-	            Component comp = table.prepareRenderer(renderer, row, column);
-	            width = Math.max(comp.getPreferredSize().width, width);
-	        }
-	        columnModel.getColumn(column).setPreferredWidth(width+50);
-	    }
+		final TableColumnModel columnModel = table.getColumnModel();
+		for (int column = 0; column < table.getColumnCount(); column++) {
+			int width = 200; // Min width
+			for (int row = 0; row < table.getRowCount(); row++) {
+				TableCellRenderer renderer = table.getCellRenderer(row, column);
+				Component comp = table.prepareRenderer(renderer, row, column);
+				width = Math.max(comp.getPreferredSize().width, width);
+			}
+			columnModel.getColumn(column).setPreferredWidth(width+50);
+		}
 	}
-	
+
 	private JScrollPane initSymbolTablePanel() {
 		symbolTableModel = new SymbolTableModel();
 		symbolTable = new JTable(symbolTableModel);
@@ -201,7 +198,7 @@ public class EditorJFrame extends JFrame {
 		mainTabPane.setBackground(new Color(0, 121, 107));
 		return mainPanel;
 	}
-	
+
 	private void initMenu() {
 		mainMenu = new JMenuBar();
 		initFileMenu();
@@ -211,7 +208,7 @@ public class EditorJFrame extends JFrame {
 		initHelpMenu();
 		addToMenuBar();
 	}
-	
+
 	private void addToMenuBar() {
 		mainMenu.add(mnuFile);
 		mainMenu.add(mnuEdit);
@@ -219,7 +216,7 @@ public class EditorJFrame extends JFrame {
 		mainMenu.add(mnuView);
 		mainMenu.add(mnuHelp);
 	}
-	
+
 	private void initFileMenu() {
 		mnuFile = new JMenu("File");
 		mnuFile.setMnemonic(KeyEvent.VK_F);
@@ -236,7 +233,7 @@ public class EditorJFrame extends JFrame {
 		mnuFile.add(new JSeparator());
 		mnuFile.add(mnuExit);
 	}
-	
+
 	private void initEditMenu() {
 		mnuEdit = new JMenu("Edit");
 		mnuEdit.setMnemonic(KeyEvent.VK_E);
@@ -252,7 +249,7 @@ public class EditorJFrame extends JFrame {
 		mnuEdit.add(mnuCopy);
 		mnuEdit.add(mnuPaste);
 	}
-	
+
 	private void initCommandMenu() {
 		mnuCommand = new JMenu("Command");
 		mnuCommand.setMnemonic(KeyEvent.VK_C);
@@ -263,7 +260,7 @@ public class EditorJFrame extends JFrame {
 		mnuCommand.add(mnuCompile);
 		mnuCommand.add(mnuExecute);
 	}
-	
+
 	private void initViewMenu() {
 		mnuView = new JMenu("View");
 		mnuView.setMnemonic(KeyEvent.VK_V);
@@ -282,7 +279,7 @@ public class EditorJFrame extends JFrame {
 		//mnuView.add(new JSeparator());
 		//mnuView.add(mnuConfig);
 	}
-	
+
 	private void initHelpMenu() {
 		mnuHelp = new JMenu("Help");
 		mnuHelp.setMnemonic(KeyEvent.VK_H);
@@ -327,7 +324,7 @@ public class EditorJFrame extends JFrame {
 		mainToolBar.add(t);
 		return t;
 	}
-	
+
 	private void initAddToolBar() {
 		addToolBar = new JToolBar(null, JToolBar.VERTICAL);
 		addToolBar.setBackground(Color.WHITE);
@@ -340,7 +337,7 @@ public class EditorJFrame extends JFrame {
 		toolBarVariable = createAddToolBarButton("Variable", getClass().getResource("resources/variable.png"));
 		toolBarDo = createAddToolBarButton("Loop", getClass().getResource("resources/do.png"));
 	}
-	
+
 	private JButton createAddToolBarButton(String title, URL iconPath) {
 		JButton t = new JButton(title, new ImageIcon(iconPath));
 		t.setUI(new VerticalFlatToolBarButtonUI());
@@ -351,7 +348,7 @@ public class EditorJFrame extends JFrame {
 		addToolBar.add(t);
 		return t;
 	}
-	
+
 	public void setMnuOpenAction(Action action) {
 		mnuOpen.setAction(action);
 	}
@@ -371,23 +368,23 @@ public class EditorJFrame extends JFrame {
 	public void setMnuExitAction(Action action) {
 		mnuExit.setAction(action);
 	}
-	
+
 	public void setMnuUndoAction(Action action) {
 		mnuUndo.setAction(action);
 	}
-	
+
 	public void setMnuRedoAction(Action action) {
 		mnuRedo.setAction(action);
 	}
-	
+
 	public void setMnuCutAction(Action action) {
 		mnuCut.setAction(action);
 	}
-	
+
 	public void setMnuCopyAction(Action action) {
 		mnuCopy.setAction(action);
 	}
-	
+
 	public void setMnuPasteAction(Action action) {
 		mnuPaste.setAction(action);
 	}
@@ -411,7 +408,7 @@ public class EditorJFrame extends JFrame {
 	public void setMnuSymbolTableAction(Action action) {
 		mnuSymbolTable.setAction(action);
 	}
-	
+
 	public void setMnuDerivationAction(Action action) {
 		mnuDerivation.setAction(action);
 	}
@@ -435,95 +432,95 @@ public class EditorJFrame extends JFrame {
 	public void setMnuAboutAction(Action action) {
 		mnuAbout.setAction(action);
 	}
-	
+
 	public void setMnuConfigAction(Action action) {
 		mnuConfig.setAction(action);
 	}
-	
+
 	public void setMnuOpinionAction(Action action) {
 		mnuOpinion.setAction(action);
 	}
-	
+
 	public void setTabIndex(int index) {
 		mainTabPane.setSelectedIndex(index);
 	}
-	
+
 	public int getTabIndex() {
 		return mainTabPane.getSelectedIndex();
 	}
-	
+
 	public void setTabChangeListener(ChangeListener listener) {
 		mainTabPane.addChangeListener(listener);
 	}
-	
+
 	public void setToolBarNewAction(Action action) {
 		toolBarNew.setAction(action);
 	}
-	
+
 	public void setToolBarOpenAction(Action action) {
 		toolBarOpen.setAction(action);
 	}
-	
+
 	public void setToolBarSaveAction(Action action) {
 		toolBarSave.setAction(action);
 	}
-	
+
 	public void setToolBarTokenizeAction(Action action) {
 		toolBarTokenize.setAction(action);
 	}
-	
+
 	public void setToolBarCompileAction(Action action) {
 		toolBarCompile.setAction(action);
 	}
-	
+
 	public void setToolBarExecute(Action action) {
 		toolBarExecute.setAction(action);
 	}
-	
+
 	public void setToolBarRobot(Action action) {
 		toolBarRobot.setAction(action);
 	}
-	
+
 	public void setToolBarObstacle(Action action) {
 		toolBarObstacle.setAction(action);
 	}
-	
+
 	public void setToolBarAdd(Action action) {
 		toolBarAdd.setAction(action);
 	}
-	
+
 	public void setToolBarMove(Action action) {
 		toolBarMove.setAction(action);
 	}
-	
+
 	public void setToolBarVariable(Action action) {
 		toolBarVariable.setAction(action);
 	}
-	
+
 	public void setToolBarDo(Action action) {
 		toolBarDo.setAction(action);
 	}
-	
+
 	public void setToolBarError(Action action) {
 		toolBarError.setAction(action);
 	}
-	
+
 	public void setToolBarUndo(Action action) {
 		toolBarUndo.setAction(action);
 	}
-	
+
 	public void setToolBarRedo(Action action) {
 		toolBarRedo.setAction(action);
 	}
-	
+
 	public void setToolBarCopy(Action action) {
 		toolBarCopy.setAction(action);
 	}
-	
+
 	public void setToolBarPaste(Action action) {
 		toolBarPaste.setAction(action);
 	}
-	
+
 	public String getTextPaneText() {
 		String allText = null;
 		try {
@@ -533,15 +530,15 @@ public class EditorJFrame extends JFrame {
 		}
 		return allText;
 	}
-	
+
 	public void setTextPaneText(String text) {
 		textPane.setText(text);
 	}
-	
+
 	public void setTextPaneDocumentListener(DocumentListener listener) {
 		textPane.getDocument().addDocumentListener(listener);
 	}
-	
+
 	public void setInsertText(String text) {
 		try {
 			textPane.getDocument().insertString(textPane.getCaretPosition(), text, null);
@@ -550,71 +547,71 @@ public class EditorJFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setAppendText(String line) {
 		textPane.setText(textPane.getText() + line);
 	}
-	
+
 	public void repaintTextPane() {
 		textPane.repaint(10);
 	}
-	
+
 	public void addTokenizeItem(String type, String chValue, int intValue) {
 		symbolTableModel.addItem(type, chValue, intValue);
 	}
-	
+
 	public void clearTokenizedItem() {
 		symbolTableModel.clearTable();
 	}
-	
+
 	public void setEditorTitle(String fileName) {
 		setTitle("Robotz - " + fileName);
 	}
-	
+
 	public void addDerivationItem(String step, String derivation) {
 		derivationTableModel.addItem(step, derivation);
 	}
-	
+
 	public void clearDerivationItem() {
 		derivationTableModel.clearTable();
 	}
-	
+
 	public void textPanePaste() {
 		textPane.paste();
 	}
-	
+
 	public void textPaneCut() {
 		textPane.cut();
 	}
-	
+
 	public void textPaneCopy() {
 		textPane.copy();
 	}
-	
+
 	public void setTextPaneCaretListener(CaretListener listener) {
 		textPane.addCaretListener(listener);
 	}
-	
+
 	public JTextPane getJTextPane() {
 		return textPane;
 	}
-	
+
 	public Object getSymbolTableValueAt(int row, int col) {
 		return symbolTableModel.getValueAt(row, col);
 	}
-	
+
 	public void setSymbolTableValueAt(Object value, int row, int col) {
-		
+
 		fcr.setUpdatedRow(row);
 		symbolTableModel.setValueAt(value, row, col);
 		symbolTable.repaint();
-		
+
 	}
-	
+
 	public void resetTextPaneDocumentListener(DocumentListener listener) {
 		textPane.getDocument().removeDocumentListener(listener);
 	}
-	
+
 	public int getCurrentSymbolTableRow() {
 		return symbolTableModel.getRowCount() - 1;
 	}

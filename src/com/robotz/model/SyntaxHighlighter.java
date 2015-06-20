@@ -36,7 +36,7 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 	
 	@Override
 	protected Void doInBackground() throws Exception {
-		
+				
 		Matcher m = VARIABLE.matcher(textPane.getDocument().getText(0, textPane.getDocument().getLength()));
 		while (m.find()) {
 			textPane.getStyledDocument().setCharacterAttributes(m.start(), (m.end() - m.start()), textStyleVariable, false);
@@ -56,7 +56,7 @@ public class SyntaxHighlighter extends SwingWorker<Void, Object> {
 		while (m.find()) {
 			textPane.getStyledDocument().setCharacterAttributes(m.start(), (m.end() - m.start()), textStyleKeyword, false);
 		}
-		
+								
 		return null;
 	}
 

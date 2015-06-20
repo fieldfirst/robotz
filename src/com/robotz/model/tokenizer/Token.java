@@ -1,4 +1,4 @@
-package com.robotz.model;
+package com.robotz.model.tokenizer;
 
 
 public interface Token {

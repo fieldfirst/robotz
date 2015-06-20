@@ -1,6 +1,6 @@
-package com.robotz.model.parsetree;
+package com.robotz.model.parser.parsetree;
 
-import com.robotz.model.Token;
+import com.robotz.model.tokenizer.Token;
 
 
 public class NodeDo extends Node {

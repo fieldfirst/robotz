@@ -1,4 +1,4 @@
-package com.robotz.model;
+package com.robotz.model.parser;
 
 import java.util.HashMap;
 

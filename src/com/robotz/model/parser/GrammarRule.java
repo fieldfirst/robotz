@@ -1,8 +1,6 @@
-package com.robotz.model.grammar;
+package com.robotz.model.parser;
 
 import java.util.Stack;
-
-import com.robotz.model.ParserUtility;
 
 public class GrammarRule {
 

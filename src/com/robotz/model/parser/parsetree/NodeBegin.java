@@ -1,4 +1,4 @@
-package com.robotz.model.parsetree;
+package com.robotz.model.parser.parsetree;
 
 public class NodeBegin extends Node {
 	

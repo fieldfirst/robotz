@@ -6,8 +6,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultCaret;
 
@@ -24,6 +27,7 @@ public class AnimationJFrame extends JFrame {
 
 	private JTextArea productionOutput;
 	private JPanel mainPanel;
+	private JScrollPane mainScrollPane;
 
 	private ArrayList<ArrayList<JPanel>> tiles = new ArrayList<ArrayList<JPanel>>();
 
@@ -32,10 +36,12 @@ public class AnimationJFrame extends JFrame {
 	private int mapWidth;
 	private int mapHeight;
 
-	JSlider speedSlider;
+	private JSlider speedSlider;
 
 	private ErrorDialog errorDialog;
 	private EditorJFrame frmMain;
+
+	private UpdateViewPortThread updateViewPort;
 
 	public AnimationJFrame(ErrorDialog errorDialog, EditorJFrame frmMain) {
 
@@ -51,6 +57,8 @@ public class AnimationJFrame extends JFrame {
 
 		this.errorDialog = errorDialog;
 		this.frmMain = frmMain;
+
+		updateViewPort = new UpdateViewPortThread(this);
 
 	}
 
@@ -72,11 +80,13 @@ public class AnimationJFrame extends JFrame {
 
 		mainPanel = new JPanel();
 
-		JScrollPane mainScrollPane = new JScrollPane(mainPanel);
+		mainScrollPane = new JScrollPane(mainPanel);
 
 		mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		mainScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		mainScrollPane.setViewportView(mainPanel);
 
 		add(mainScrollPane, BorderLayout.CENTER);
 
@@ -220,7 +230,7 @@ public class AnimationJFrame extends JFrame {
 	public void moveRobot(String robotName, String direction, int distance, int threadSleepTime) throws InterruptedException {
 
 		// Get the robot
-		Robot robot = resolveRobot(robotName);
+		final Robot robot = resolveRobot(robotName);
 
 		// Set a new heading
 		robot.setDirection(direction);
@@ -229,12 +239,19 @@ public class AnimationJFrame extends JFrame {
 
 		while (walked < distance) {
 
+			// focusing the moved robot
+			updateViewPort.setRobot(robot);
+			SwingUtilities.invokeLater(updateViewPort);
+
 			robot.move(tiles);
 
 			walked++;
 
 			reRenderGraphics();
-
+			
+			// Attempt to fix the glitches
+			mainScrollPane.repaint();
+			
 			addDescription("move " + robot.getRobotName() + " from (" + robot.getOldXPosition() + "," + robot.getOldYPosition() + ") to (" + robot.getXPosition() + "," + robot.getYPosition() + ")");
 
 			Thread.sleep(threadSleepTime);
@@ -321,6 +338,36 @@ public class AnimationJFrame extends JFrame {
 
 		Thread.currentThread().interrupt();
 
+	}
+	
+	private class UpdateViewPortThread implements Runnable {
+		
+		private Robot robot;
+		private AnimationJFrame animationWindow;
+		
+		public UpdateViewPortThread(AnimationJFrame a) {
+			
+			animationWindow = a;
+			
+		}
+		
+		public void setRobot(Robot r) {
+			
+			robot = r;
+			
+		}
+
+		@Override
+		public void run() {
+			ReentrantLock locker = new ReentrantLock();
+			locker.lock();
+			Rectangle bound = robot.getBounds();
+			bound.setSize(animationWindow.getWidth() / 2, animationWindow.getHeight() / 2);
+			bound.setLocation(bound.x - animationWindow.getWidth() / 4, bound.y - animationWindow.getHeight() / 4);
+			mainPanel.scrollRectToVisible(bound);
+			locker.unlock();
+		}
+		
 	}
 
 }

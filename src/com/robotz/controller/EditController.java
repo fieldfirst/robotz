@@ -23,6 +23,8 @@ public class EditController extends Controller {
 	
 	private UndoManager undoManager;
 	
+	private UndoableEditListener undoListener;
+		
 	protected void initAction() {
 		editUndoAction = new EditUndoAction();
 		editRedoAction = new EditRedoAction();
@@ -48,16 +50,19 @@ public class EditController extends Controller {
 		
 		Document doc = frmMain.getJTextPane().getDocument();
 		undoManager = new UndoManager();
-		doc.addUndoableEditListener(new UndoableEditListener() {
+		undoListener = new UndoableEditListener() {
 			
 			@Override
 			public void undoableEditHappened(UndoableEditEvent arg0) {
 				
 				undoManager.addEdit(arg0.getEdit());
 				updateUndoRedoStatus();
-				
+								
 			}
-		});
+			
+		};
+		doc.addUndoableEditListener(undoListener);
+		
 	}
 	
 	protected void assignMenuAction() {

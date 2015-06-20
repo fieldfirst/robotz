@@ -20,8 +20,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.robotz.model.SyntaxHighlighter;
-
 public class FileController extends Controller {
 
 	private FileOpenAction fileOpenAction;
@@ -31,8 +29,6 @@ public class FileController extends Controller {
 	private FileExitAction fileExitAction;
 
 	private String fileName = "";
-
-	private SyntaxHighlighter syntaxHighlighter;
 	
 	private DocumentListener textPaneListener;
 
@@ -46,19 +42,16 @@ public class FileController extends Controller {
 		textPaneListener = new DocumentListener(){
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
-				//syntaxHighlighting();
 				fileSaveAction.setEnabled(true);
 			}
 
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
-				//syntaxHighlighting();	
 				fileSaveAction.setEnabled(true);
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				//syntaxHighlighting();
 				fileSaveAction.setEnabled(true);
 			}
 		};
@@ -182,14 +175,6 @@ public class FileController extends Controller {
 		editController.resetUndoRedoStatus();
 	}
 
-	private void syntaxHighlighting() {
-		if (syntaxHighlighter == null || syntaxHighlighter.isDone()) {			
-			syntaxHighlighter = new SyntaxHighlighter(frmMain.getJTextPane());
-			syntaxHighlighter.execute();
-			frmMain.getJTextPane().repaint();
-		}
-	}
-
 	private class FileNewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -957102144625612679L;
@@ -238,7 +223,7 @@ public class FileController extends Controller {
 				preparation();
 				
 				frmMain.setTextPaneDocumentListener(textPaneListener);
-
+								
 			}
 		}
 
@@ -315,7 +300,7 @@ public class FileController extends Controller {
 				}
 				
 				frmMain.setTextPaneDocumentListener(textPaneListener);
-				
+		
 			}
 		}
 
