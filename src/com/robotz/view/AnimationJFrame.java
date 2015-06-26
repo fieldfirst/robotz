@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultCaret;
 
@@ -34,10 +35,13 @@ public class AnimationJFrame extends JFrame {
 	private int mapHeight;
 
 	private JSlider speedSlider;
-	// private UpdateViewPortThread updateViewPortThread;
-	
+	private JSlider textureSizeSlider;
+
 	private ErrorDialog errorDialog;
 	private EditorJFrame frmMain;
+
+	public static Dimension textureSize = new Dimension(52, 52);
+
 
 	public AnimationJFrame(ErrorDialog errorDialog, EditorJFrame frmMain) {
 
@@ -53,9 +57,34 @@ public class AnimationJFrame extends JFrame {
 
 		this.errorDialog = errorDialog;
 		this.frmMain = frmMain;
-		
-		// updateViewPortThread = new UpdateViewPortThread(this);
-		
+
+		textureSizeSlider.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				
+				textureSize.setSize(textureSizeSlider.getValue(), textureSizeSlider.getValue());
+
+				for (int i=0; i<mapWidth; i++) {
+
+					for (int k=0; k<mapHeight; k++) {
+
+						JPanel texture = tiles.get(i).get(k);
+
+						texture.repaint();
+
+						((Texture) texture).updateSize();
+
+					}
+
+				}
+
+				mainPanel.revalidate();
+
+			}
+
+		});
+
 	}
 
 	private void initComponent() {
@@ -86,19 +115,45 @@ public class AnimationJFrame extends JFrame {
 
 		add(mainScrollPane, BorderLayout.CENTER);
 
-		speedSlider = new JSlider(700, 1500, 1000);
-
-		speedSlider.setMinorTickSpacing(2);
-
-		speedSlider.setMajorTickSpacing(10);
-
 		JPanel topPanel = new JPanel(new BorderLayout());
+
+		JPanel leftTopPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		textureSizeSlider = new JSlider(32, 64, 52);
+
+		textureSizeSlider.setMinorTickSpacing(5);
+
+		textureSizeSlider.setMajorTickSpacing(10);
+
+		textureSizeSlider.setPaintTicks(true);
+
+		textureSizeSlider.setSnapToTicks(true);
+
+		leftTopPanel.add(new JLabel("Zoom : "));
+
+		leftTopPanel.add(new JLabel("small"));
+
+		leftTopPanel.add(textureSizeSlider);
+
+		leftTopPanel.add(new JLabel("large"));
+
+		topPanel.add(leftTopPanel, BorderLayout.WEST);
 
 		JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		rightTopPanel.add(new JLabel("Speed : "));
 
 		rightTopPanel.add(new JLabel("fast"));
+
+		speedSlider = new JSlider(900, 1800, 1000);
+
+		speedSlider.setMinorTickSpacing(100);
+
+		speedSlider.setMajorTickSpacing(200);
+
+		speedSlider.setPaintTicks(true);
+
+		speedSlider.setSnapToTicks(true);
 
 		rightTopPanel.add(speedSlider);
 
@@ -234,11 +289,6 @@ public class AnimationJFrame extends JFrame {
 
 		// Set a new heading
 		robot.setDirection(direction);
-		
-		// Automatically focus at the robot
-//		updateViewPortThread.setRobot(robot);
-//		SwingUtilities.invokeLater(updateViewPortThread);
-//		mainScrollPane.repaint();
 
 		int walked = 0;
 
@@ -337,42 +387,5 @@ public class AnimationJFrame extends JFrame {
 		Thread.currentThread().interrupt();
 
 	}
-	
-//	private class UpdateViewPortThread implements Runnable {
-//		
-//		private AnimationJFrame animationJFrame;
-//		private Robot robot;
-//		private Rectangle robotBound = new Rectangle();
-//		
-//		public UpdateViewPortThread(AnimationJFrame animationJFrame) {
-//			
-//			this.animationJFrame = animationJFrame;
-//			
-//		}
-//		
-//		public void setRobot(Robot robot) {
-//			
-//			this.robot = robot;
-//			
-//		}
-//
-//		@Override
-//		public void run() {
-//			
-//			ReentrantLock locker = new ReentrantLock();
-//			
-//			locker.lock();
-//			
-//			robotBound.setSize(animationJFrame.getWidth(), animationJFrame.getHeight());
-//			
-//			robotBound.setLocation(robot.getX() - animationJFrame.getWidth(), robot.getY() - animationJFrame.getHeight());
-//			
-//			robot.scrollRectToVisible(robotBound);
-//			
-//			locker.unlock();
-//			
-//		}
-//		
-//	}
 
 }
