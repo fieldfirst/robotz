@@ -1,5 +1,6 @@
 package com.robotz.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -41,6 +42,8 @@ public class Obstacle extends JPanel implements Texture {
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		
+		g.setColor(Color.WHITE);
 				
 		g.drawImage(obstacle, 0, 0, null);
 		

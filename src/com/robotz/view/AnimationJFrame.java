@@ -6,10 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultCaret;
 
@@ -37,11 +34,10 @@ public class AnimationJFrame extends JFrame {
 	private int mapHeight;
 
 	private JSlider speedSlider;
-
+	// private UpdateViewPortThread updateViewPortThread;
+	
 	private ErrorDialog errorDialog;
 	private EditorJFrame frmMain;
-
-	private UpdateViewPortThread updateViewPort;
 
 	public AnimationJFrame(ErrorDialog errorDialog, EditorJFrame frmMain) {
 
@@ -57,9 +53,9 @@ public class AnimationJFrame extends JFrame {
 
 		this.errorDialog = errorDialog;
 		this.frmMain = frmMain;
-
-		updateViewPort = new UpdateViewPortThread(this);
-
+		
+		// updateViewPortThread = new UpdateViewPortThread(this);
+		
 	}
 
 	private void initComponent() {
@@ -96,15 +92,19 @@ public class AnimationJFrame extends JFrame {
 
 		speedSlider.setMajorTickSpacing(10);
 
-		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel topPanel = new JPanel(new BorderLayout());
 
-		topPanel.add(new JLabel("Speed : "));
+		JPanel rightTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-		topPanel.add(new JLabel("fast"));
+		rightTopPanel.add(new JLabel("Speed : "));
 
-		topPanel.add(speedSlider);
+		rightTopPanel.add(new JLabel("fast"));
 
-		topPanel.add(new JLabel("slow"));
+		rightTopPanel.add(speedSlider);
+
+		rightTopPanel.add(new JLabel("slow"));
+
+		topPanel.add(rightTopPanel, BorderLayout.EAST);
 
 		add(topPanel, BorderLayout.NORTH);
 
@@ -230,28 +230,26 @@ public class AnimationJFrame extends JFrame {
 	public void moveRobot(String robotName, String direction, int distance, int threadSleepTime) throws InterruptedException {
 
 		// Get the robot
-		final Robot robot = resolveRobot(robotName);
+		Robot robot = resolveRobot(robotName);
 
 		// Set a new heading
 		robot.setDirection(direction);
+		
+		// Automatically focus at the robot
+//		updateViewPortThread.setRobot(robot);
+//		SwingUtilities.invokeLater(updateViewPortThread);
+//		mainScrollPane.repaint();
 
 		int walked = 0;
 
 		while (walked < distance) {
-
-			// focusing the moved robot
-			updateViewPort.setRobot(robot);
-			SwingUtilities.invokeLater(updateViewPort);
 
 			robot.move(tiles);
 
 			walked++;
 
 			reRenderGraphics();
-			
-			// Attempt to fix the glitches
-			mainScrollPane.repaint();
-			
+
 			addDescription("move " + robot.getRobotName() + " from (" + robot.getOldXPosition() + "," + robot.getOldYPosition() + ") to (" + robot.getXPosition() + "," + robot.getYPosition() + ")");
 
 			Thread.sleep(threadSleepTime);
@@ -340,34 +338,41 @@ public class AnimationJFrame extends JFrame {
 
 	}
 	
-	private class UpdateViewPortThread implements Runnable {
-		
-		private Robot robot;
-		private AnimationJFrame animationWindow;
-		
-		public UpdateViewPortThread(AnimationJFrame a) {
-			
-			animationWindow = a;
-			
-		}
-		
-		public void setRobot(Robot r) {
-			
-			robot = r;
-			
-		}
-
-		@Override
-		public void run() {
-			ReentrantLock locker = new ReentrantLock();
-			locker.lock();
-			Rectangle bound = robot.getBounds();
-			bound.setSize(animationWindow.getWidth() / 2, animationWindow.getHeight() / 2);
-			bound.setLocation(bound.x - animationWindow.getWidth() / 4, bound.y - animationWindow.getHeight() / 4);
-			mainPanel.scrollRectToVisible(bound);
-			locker.unlock();
-		}
-		
-	}
+//	private class UpdateViewPortThread implements Runnable {
+//		
+//		private AnimationJFrame animationJFrame;
+//		private Robot robot;
+//		private Rectangle robotBound = new Rectangle();
+//		
+//		public UpdateViewPortThread(AnimationJFrame animationJFrame) {
+//			
+//			this.animationJFrame = animationJFrame;
+//			
+//		}
+//		
+//		public void setRobot(Robot robot) {
+//			
+//			this.robot = robot;
+//			
+//		}
+//
+//		@Override
+//		public void run() {
+//			
+//			ReentrantLock locker = new ReentrantLock();
+//			
+//			locker.lock();
+//			
+//			robotBound.setSize(animationJFrame.getWidth(), animationJFrame.getHeight());
+//			
+//			robotBound.setLocation(robot.getX() - animationJFrame.getWidth(), robot.getY() - animationJFrame.getHeight());
+//			
+//			robot.scrollRectToVisible(robotBound);
+//			
+//			locker.unlock();
+//			
+//		}
+//		
+//	}
 
 }

@@ -1,5 +1,6 @@
 package com.robotz.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -71,6 +72,8 @@ public class Robot extends JPanel implements Texture {
 	protected void paintComponent(Graphics g) {
 		
 		g.drawImage(background, 0, 0, null);
+		
+		g.setColor(Color.WHITE);
 		
 		g.drawString(variableName, 20, 50);
 		
