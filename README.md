@@ -9,4 +9,7 @@
 
 #### Screenshot :
 ![alt text][logo]
-[logo]: https://github.com/fieldfirst/Robotz/blob/master/Screenshot-Mac.png "Robotz main screen"
+![](https://github.com/neatblackcrow/robotz/blob/master/Screen%20Shot%202566-09-23%20at%2015.16.06.png?raw=true)
+![](https://github.com/neatblackcrow/robotz/blob/master/Screen%20Shot%202566-09-23%20at%2015.18.57.png?raw=true)
+![](https://github.com/neatblackcrow/robotz/blob/master/Screen%20Shot%202566-09-23%20at%2015.19.38.png?raw=true)
+![](https://github.com/neatblackcrow/robotz/blob/master/Screen%20Recording%202566-09-23%20at%2015.17.24.gif?raw=true)
